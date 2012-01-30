@@ -18,13 +18,13 @@ class EssentialCurrentEkburgDriver extends EssentialCurrentHmnDriver {
 	public function run() {
 		parent::run();
 		$data = $this->getData();
-		if (isset($data[$this->cityId]))
+		if (isset($data['data'][$this->cityId]))
 		{
 			$c = $this->component->loadUrl($this->ekburgUrl);
 			$ekburgData = CJSON::decode($c);
 			if (is_array($ekburgData) && isset($ekburgData['weather']) && isset($ekburgData['weather']['deg']))
 			{
-				$data[$this->cityId]['current_temp'] = $ekburgData['weather']['deg'];
+				$data['data'][$this->cityId]['current_temp'] = $ekburgData['weather']['deg'];
 				$this->setData($data);
 				return true;
 			}

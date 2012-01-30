@@ -37,7 +37,7 @@ class EssentialCurrentHmnDriver extends EssentialDataDriverBase {
 		$array = $this->xmlUnserialize($xmldata);
 
 
-		$cities = array();
+		$cities = array('data'=>array(), 'cities'=>array());
 		for($i=0; $i<20; $i++)
 		{
 			if (isset($array['fact_astro']['c'][$i]))
@@ -49,12 +49,12 @@ class EssentialCurrentHmnDriver extends EssentialDataDriverBase {
 			
 				list($ico, $text, $weatherStatus) = $this->codeRepl($weather['yc'],$weather['cb']);
 
-				$cities[$city_id] = array(
-					't' => $weather['t'],
-					'current_temp' => (string)intval($weather['tf']),
-					'current_cond' => $text,
-					'current_ico' => $this->codeToIcon($ico),
+				$cities['data'][$city_id] = array(
+					'temperature' => (string)intval($weather['tf']),
+					'condition' => $text,
+					'ico' => $this->codeToIcon($ico),
 				);
+				$cities['cities'][$city_id] = $weather['t'];
 			}
 		}
 		

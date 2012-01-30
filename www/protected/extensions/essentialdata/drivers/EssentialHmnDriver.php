@@ -17,6 +17,8 @@ class EssentialHmnDriver extends EssentialDataDriverBase {
 	protected $prefix = '66_ru';
 	
 	public function run() {
+		$cities = array('10_days'=>array(), '3_days'=>array(), 'cities'=>array());
+		
 		$files_days = array(
 			$this->prefix.'/0day_forecast.xml',
 			$this->prefix.'/1day_forecast.xml',
@@ -63,7 +65,7 @@ class EssentialHmnDriver extends EssentialDataDriverBase {
 			
 			foreach ($celements as $city_id => $itemtime)
 			{
-				$cities[$city_id] = $itemtime['t']; 
+				$citiesNames[$city_id] = $itemtime['t']; 
 				
 				// День
 				$t = 12;
@@ -76,28 +78,18 @@ class EssentialHmnDriver extends EssentialDataDriverBase {
 			 	
 			 	$wind_direct = $this->windDirect($itemtime['dwd']);
 					
-				/*	
-				setWeeather_toNew66(array(
-				         'hour' => $t,
-				         'date' => date('Y', $time).'-'.date('m', $time).'-'.date('d', $time),
-				         'temperatureMin' => $itemtime['td'],
-				         'temperatureMax' => $itemtime['td'],
-				         'relwetMin' => $itemtime['hum_d'],
-				         'relwetMax' => $itemtime['hum_d'],
-				         'pressureMin' => $itemtime['pd'],
-				         'pressureMax' => $itemtime['pd'],
-				         'windMin' => $itemtime['dws'],
-				         'windMax' => $itemtime['dws'],
-				         'cloudiness' => $c,
-				         'precipitation' => $p,
-				         'rpower' => 0,
-				         'spower' => 0,
-				         'windDirection' => $wind_direct,
-				         'heatMin' => 20,
-				         'heatMax' => 20,
-				         'weekDay'=>$weekday,		         
-				    ));				
-				*/	
+				$cityItemDay = array(
+					'date' => date('Y', $time).'-'.date('m', $time).'-'.date('d', $time),
+					'hour' => $t,
+					'temperature' => $itemtime['td'],
+					'relwet' => $itemtime['hum_d'],
+					'pressure' => $itemtime['pd'],
+					'wind' => $itemtime['dws'],
+					'cloudiness' => $c,
+					'precipitation' => $p,
+					'windDirection' => $wind_direct,
+				);
+			 	
 					
 				// Ночь
 				$t = 0;
@@ -109,29 +101,19 @@ class EssentialHmnDriver extends EssentialDataDriverBase {
 			 	$p = $this->getPrecipitation($itemtime['nw']);	
 			 	
 			 	$wind_direct = $this->windDirect($itemtime['nwd']);	
-							
-/*
-								year="'.(int)date('Y', $time).'",
-								month="'.(int)date('m', $time).'",
-								day="'.(int)date('d', $time).'",
-								hour="'.$t.'",
-								weekday="'.$weekday.'",
-								cloudiness="'.$c.'",
-								precipitation="'.$p.'",
-								rpower="0",
-								spower="0",
-								pressure_max="'.$itemtime['pn'].'",
-								pressure_min="'.$itemtime['pn'].'",
-								temperature_max="'.$itemtime['tn'].'",
-								temperature_min="'.$itemtime['tn'].'",
-								wind_max="'.$itemtime['nws'].'",
-								wind_min="'.$itemtime['nws'].'",
-								wind_direction="'.$wind_direct.'",
-								relwet_max="'.$itemtime['hum_n'].'",
-								relwet_min="'.$itemtime['hum_n'].'",
-								predict="255",
-								test="2"
-*/
+
+				$cityItemNight = array(
+					'date' => date('Y', $time).'-'.date('m', $time).'-'.date('d', $time),
+					'hour' => $t,
+					'temperature' => $itemtime['tn'],
+					'relwet' => $itemtime['hum_n'],
+					'pressure' => $itemtime['pn'],
+					'wind' => $itemtime['nws'],
+					'cloudiness' => $c,
+					'precipitation' => $p,
+					'windDirection' => $wind_direct,
+				);
+				$cities['10_days'][$currDate][$city_id] = array('day' => $cityItemDay, 'night' => $cityItemDay);
 			}
 		}	
 		
@@ -193,7 +175,7 @@ class EssentialHmnDriver extends EssentialDataDriverBase {
 			
 			foreach ($celements as $city_id => $data)
 			{
-				$cities[$city_id] = $data['t']; 
+				$citiesNames[$city_id] = $data['t']; 
 				
 				foreach($data['ft'] as $t => $itemtime)
 				{
@@ -206,34 +188,24 @@ class EssentialHmnDriver extends EssentialDataDriverBase {
 					$c = $this->getCloudiness($itemtime['w']);
 				 	$p = $this->getPrecipitation($itemtime['w']);
 				 	
-/*
-									city_id="'.$city_id.'",
-									dtime="'.$time.'",
-									year="'.(int)date('Y', $time).'",
-									month="'.(int)date('m', $time).'",
-									day="'.(int)date('d', $time).'",
-									hour="'.$t.'",
-									weekday="'.$weekday.'",
-									cloudiness="'.$c.'",
-									precipitation="'.$p.'",
-									rpower="0",
-									spower="0",
-									pressure_max="'.$itemtime['p'].'",
-									pressure_min="'.$itemtime['p'].'",
-									temperature_max="'.$itemtime['tf'].'",
-									temperature_min="'.$itemtime['tt'].'",
-									wind_max="'.$itemtime['ws'].'",
-									wind_min="'.$itemtime['ws'].'",
-									wind_direction="'.$wind_direct.'",
-									relwet_max="'.$itemtime['hum'].'",
-									relwet_min="'.$itemtime['hum'].'",
-									predict="255",
-									test="2"
-*/
-
+					$cityItem = array(
+						'date' => date('Y', $time).'-'.date('m', $time).'-'.date('d', $time),
+						'hour' => $t,
+						'temperature' => $itemtime['tf'],
+						'relwet' => $itemtime['hum'],
+						'pressure' => $itemtime['p'],
+						'wind' => $itemtime['ws'],
+						'cloudiness' => $c,
+						'precipitation' => $p,
+						'windDirection' => $wind_direct,
+					);
+				 	
+					$cities['3_days'][$currDate][$city_id] = array($cityItem);
 				}
 			}
 		}
+		
+		$cities['cities'] = $citiesNames;
 		
 		$this->setData($cities);
 		
