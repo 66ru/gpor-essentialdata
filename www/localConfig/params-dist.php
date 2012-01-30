@@ -8,7 +8,7 @@ return array(
 	'yiiDebug' => true, // YII debug
 
 	'domain' => '',
-	'interfaceResourcesUrl' => '/static', // Путь до ресурсов (css, js, картинки) интерфейса
+	'essentialDataFilePath' => '', // Путь до файлов с фидами
 
 	/* email */
 	'adminEmail' => 'gpor-dev-errors@googlegroups.com', // this is used in error pages and in rss (webMaster)

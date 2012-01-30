@@ -8,7 +8,7 @@ return array(
 	'yiiDebug' => false, // YII debug
 
 	'domain' => 'http://essentialdata.localhost',
-	'interfaceResourcesUrl' => '/static', // Путь до ресурсов (css, js, картинки) интерфейса
+	'essentialDataFilePath' => 'c:\\wamp\\www\\gpor-essentialdata\\www\\files', // Путь до файлов с фидами
 
 	/* email */
 	'adminEmail' => 'gpor-dev-errors@googlegroups.com', // this is used in error pages and in rss (webMaster)

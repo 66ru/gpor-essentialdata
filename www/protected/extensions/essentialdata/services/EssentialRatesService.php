@@ -7,10 +7,6 @@
 
 require_once dirname(dirname(__FILE__)).'/EssentialDataServiceBase.php';
 
-/**
- * Currency rates provider
- * @package application.extensions.essentialdata.services
- */
 class EssentialRatesService extends EssentialDataServiceBase {	
 	
 	protected $name = 'currency';
