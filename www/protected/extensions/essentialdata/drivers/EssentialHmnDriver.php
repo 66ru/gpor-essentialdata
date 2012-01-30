@@ -17,7 +17,7 @@ class EssentialHmnDriver extends EssentialDataDriverBase {
 	protected $prefix = '66_ru';
 	
 	public function run() {
-		$cities = array('10_days'=>array(), '3_days'=>array(), 'cities'=>array());
+		$cities = array('data'=>array(), 'cities'=>array());
 		
 		$files_days = array(
 			$this->prefix.'/0day_forecast.xml',
@@ -79,8 +79,6 @@ class EssentialHmnDriver extends EssentialDataDriverBase {
 			 	$wind_direct = $this->windDirect($itemtime['dwd']);
 					
 				$cityItemDay = array(
-					'date' => date('Y', $time).'-'.date('m', $time).'-'.date('d', $time),
-					'hour' => $t,
 					'temperature' => $itemtime['td'],
 					'relwet' => $itemtime['hum_d'],
 					'pressure' => $itemtime['pd'],
@@ -103,8 +101,6 @@ class EssentialHmnDriver extends EssentialDataDriverBase {
 			 	$wind_direct = $this->windDirect($itemtime['nwd']);	
 
 				$cityItemNight = array(
-					'date' => date('Y', $time).'-'.date('m', $time).'-'.date('d', $time),
-					'hour' => $t,
 					'temperature' => $itemtime['tn'],
 					'relwet' => $itemtime['hum_n'],
 					'pressure' => $itemtime['pn'],
@@ -113,9 +109,9 @@ class EssentialHmnDriver extends EssentialDataDriverBase {
 					'precipitation' => $p,
 					'windDirection' => $wind_direct,
 				);
-				$cities['10_days'][$currDate][$city_id] = array('day' => $cityItemDay, 'night' => $cityItemDay);
+				$cities['data'][$currDate][$city_id] = array('day' => $cityItemDay, 'night' => $cityItemNight);
 			}
-		}	
+		}
 		
 		
 		/**
@@ -163,7 +159,7 @@ class EssentialHmnDriver extends EssentialDataDriverBase {
 				
 				$new = array();
 				$tmp_ft = $celements[$city_id]['ft'];		
-				for ($i2=0; $i2<sizeof($tmp_ft)/2; $i2++)		
+				for ($i2=0; $i2<sizeof($tmp_ft); $i2++)		
 				{
 					$t = $tmp_ft[$i2]['@attributes']['t']; 
 					$new[$t]= $tmp_ft[$i2];
@@ -172,7 +168,6 @@ class EssentialHmnDriver extends EssentialDataDriverBase {
 				$celements[$city_id]['ft'] = $new;
 			}		
 		
-			
 			foreach ($celements as $city_id => $data)
 			{
 				$citiesNames[$city_id] = $data['t']; 
@@ -189,8 +184,6 @@ class EssentialHmnDriver extends EssentialDataDriverBase {
 				 	$p = $this->getPrecipitation($itemtime['w']);
 				 	
 					$cityItem = array(
-						'date' => date('Y', $time).'-'.date('m', $time).'-'.date('d', $time),
-						'hour' => $t,
 						'temperature' => $itemtime['tf'],
 						'relwet' => $itemtime['hum'],
 						'pressure' => $itemtime['p'],
@@ -200,7 +193,7 @@ class EssentialHmnDriver extends EssentialDataDriverBase {
 						'windDirection' => $wind_direct,
 					);
 				 	
-					$cities['3_days'][$currDate][$city_id] = array($cityItem);
+					$cities['data'][$currDate][$city_id][self::hourToDayPeriod($t)] = array($cityItem);
 				}
 			}
 		}
@@ -213,6 +206,19 @@ class EssentialHmnDriver extends EssentialDataDriverBase {
 			Yii::app()->essentialData->report(get_class($this).': data empty');
 		
 		return true;
+	}
+	
+	public static function hourToDayPeriod ($hour)
+	{
+		$hour = (int)$hour;
+		if ($hour>0 && $hour<7)
+			return 'night';
+		if ($hour>=7 && $hour<13)
+			return 'morning';
+		if ($hour>=13 && $hour<19)
+			return 'day';
+		if ($hour>=19 || $hour==0)
+			return 'evening';
 	}
 	
 	protected function xmlUnserialize ($xml)
@@ -324,42 +330,42 @@ class EssentialHmnDriver extends EssentialDataDriverBase {
 	protected function windDirect ($degres)
 	{
 		if ($degres==0)
-			return 8;
+			return '-'; // штиль
 		if ($degres==990)
-			return 9;
+			return '?'; // разного направления
 		
 		if (($degres>0 AND $degres<=11) OR ($degres>=349 AND $degres<=360))
-			return 0;
+			return 'n';
 		if ($degres>=12 AND $degres<=33)
-			return 0;
+			return 'n';
 		if ($degres>=34 AND $degres<=56)
-			return 1; 
+			return 'ne'; 
 		if ($degres>=57 AND $degres<=78)
-			return 1; 
+			return 'ne'; 
 		if ($degres>=79 AND $degres<=101)
-			return 2;
+			return 'e';
 		if ($degres>=102 AND $degres<=123)
-			return 2; 
+			return 'e'; 
 		if ($degres>=124 AND $degres<=146)
-			return 3;
+			return 'se';
 		if ($degres>=147 AND $degres<=168)
-			return 3;    
+			return 'se';    
 		if ($degres>=169 AND $degres<=191)
-			return 4; 
+			return 's'; 
 		if ($degres>=192 AND $degres<=214)
-			return 4;  
+			return 's';  
 		if ($degres>=215 AND $degres<=236)
-			return 5;
+			return 'sw';
 		if ($degres>=237 AND $degres<=258)
-			return 5;
+			return 'sw';
 		if ($degres>=259 AND $degres<=281)
-			return 6;
+			return 'w';
 		if ($degres>=282 AND $degres<=303)
-			return 6; 
+			return 'w'; 
 		if ($degres>=304 AND $degres<=326)
-			return 7;
+			return 'nw';
 		if ($degres>=327 AND $degres<=348)
-			return 7;
+			return 'nw';
 		return '';
 	}
 }
