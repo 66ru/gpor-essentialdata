@@ -1,0 +1,8 @@
+/.idea
+/data
+/www/localConfig/params.php
+/www/localConfig/modules/*/config.php
+/www/files
+/www/static
+/www/assets
+/www/localStorage
