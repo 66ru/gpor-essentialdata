@@ -15,7 +15,7 @@ class EssentialCbrDriver extends EssentialDataDriverBase {
 
 	public $days = 30;
 	
-	protected $url = 'http://www.cbr.ru/scripts/XML_daily.asp';
+	protected $url = 'http://www.cbr.ru/scripts/XML_daily.asp?date_req=';
 
 	public function run() {	
 		
@@ -25,60 +25,71 @@ class EssentialCbrDriver extends EssentialDataDriverBase {
 		$this->setData(array());
 		
 		$max = $this->days;
-		for($i=0; $i<$max; $i++)
+		for($i=$max; $i>=0; $i--)
 		{
-			$date = date('Y-m-d', time()-(60*60*24*($i-1)) );
-			if ($i <= 1 || !isset($oldData[$date]))
+			$date = date('Y-m-d', time()-(60*60*24*($i)) );
+
+			$res = $this->getDataOnDate ($date);
+				
+			if ($res['date'] != $res['xmlDate'])
 			{
-				$result[$date] = $this->getDataOnTime (strtotime($date.' 00:00:01'));
+				$date1 = strtotime($res['date'].' 00:00:00');
+				$date2 = strtotime($res['xmlDate'].' 00:00:00');
+				if ($date2 < $date1)
+				{
+					$previosDate = date('Y-m-d', ($date1 - (60*60*24)));
+					if (isset($result[$previosDate]))
+						unset($result[$previosDate]);
+				}
 			}
-			else
-			{
-				$result[$date] = $oldData[$date];
-			}
+			$result[$date] = $res['data'];
 		}
+		// курс на завтра
+		$date = date('Y-m-d', time()+(60*60*24) );
+		$res = $this->getDataOnDate ($date);
+		if ($res['date'] == $res['xmlDate'])
+			$result[$date] = $res['data'];
+		
 		$this->setData($result);
 		
 		return true;
 	}
 	
 	
-	protected function getDataOnTime ($date)
+	protected function getDataOnDate ($date)
 	{
 		$result = array();
-		/*
-		$testUrl = 'http://www.cbr.ru/DailyInfoWebServ/DailyInfo.asmx';
-		$request = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
-		$request .= "<soap12:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">\n";
-		$request .= "<soap12:Body>\n";
-		$request .= "<GetCursOnDateXML xmlns=\"http://web.cbr.ru/\">\n";
-		$request .= "<On_date>".date('r', $date)."</On_date>\n";
-		$request .= "</GetCursOnDateXML>\n";
-		$request .= "</soap12:Body>\n";
-		$request .= "</soap12:Envelope>\n";
-		$options = array (
-			'data' => $request,
-		);
-		$length = mb_strlen($options['data']);
-		$options['headers'] = array(
-				"POST /DailyInfoWebServ/DailyInfo.asmx HTTP/1.1",
-				"Host: www.cbr.ru",
-				"Content-Type: application/soap+xml; \"charset=utf-8\"\n",
-				"Content-Length: ".$length."\n",
-//				"SOAPAction: \"http://web.cbr.ru/GetCursOnDateXML\"\n",		
-		);
-		$data = $this->component->makeRequest($testUrl, $options);
-		print_r($data);
-		die();
-		 */
-		$data = $this->component->loadXml($this->url);
+		$tmp = explode('-', $date);
+		$data = $this->component->loadXml($this->url.$tmp[2].'/'.$tmp[1].'/'.$tmp[0]);
+		
+		if (!$data || !is_object($data))
+			throw new EssentialDataException(Yii::t('essentialdata', get_class($this) . ': result data empty'), 500);
+		
+		$tmp = array();
+		foreach ($data->attributes() as $k=>$v)
+			$tmp[$k] = (string)$v;
+		$xmlDate = isset($tmp['Date']) ? $tmp['Date'] : false;
+		if (!$xmlDate)
+			throw new EssentialDataException(Yii::t('essentialdata', get_class($this) . ': result data wrong'), 500);
+		
+		$tmp = array();
+		if (strstr($xmlDate, '/'))
+			$tmp = explode('/', $xmlDate);
+		if (strstr($xmlDate, '.'))
+			$tmp = explode('.', $xmlDate);
+		if (count($tmp) != 3)
+			throw new EssentialDataException(Yii::t('essentialdata', get_class($this) . ': result data wrong'), 500);
+		
+		$result['xmlDate'] = $tmp[2].'-'.$tmp[1].'-'.$tmp[0];
+		$result['date'] = $date;
 		
 		$key = 'Valute';
 		if ($data->$key)
 		{
+			$result['data'] = array();
 			foreach ($data->$key as $item)
 			{
-				$result[] = array(
+				$result['data'][] = array(
 					'charCode' => (string)$item->CharCode,
 					'name' => (string)$item->Name,
 					'value' => (string)$item->Value,

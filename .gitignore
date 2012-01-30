@@ -1,5 +1,7 @@
 /.idea
 /data
+/assets
+/log
 /www/localConfig/params.php
 /www/localConfig/modules/*/config.php
 /www/files
