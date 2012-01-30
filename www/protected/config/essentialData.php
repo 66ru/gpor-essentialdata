@@ -15,10 +15,9 @@ return array (
 					'class' => 'EssentialBankIndexesService',
         			'period' => '* * * * *',
 					'drivers' => array (
-//						'cbref' => array(
-//							'class' => 'EssentialCbrefDriver',
-//						),
-
+						'cbref' => array(
+							'class' => 'EssentialCbrefDriver',
+						),
 						'mosprime3m' => array(
 							'class' => 'EssentialMosprimeDriver',
 							'title' => 'Значение индекса mosprime3m',

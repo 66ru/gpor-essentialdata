@@ -8,3 +8,4 @@
 /www/static
 /www/assets
 /www/localStorage
+/www/protected/cron.log

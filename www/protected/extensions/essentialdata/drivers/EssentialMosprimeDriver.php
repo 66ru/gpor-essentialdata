@@ -26,10 +26,9 @@ class EssentialMosprimeDriver extends EssentialDataDriverBase {
 		$result = array();
 		
 		$oldData = $this->getData();
-		$this->setData(array());
 		
 		$max = $this->days;
-		for($i=0; $i<$max; $i++)
+		for($i=$max; $i>=0; $i--)
 		{
 			$date = date('Y-m-d', time()-(60*60*24*($i)) );
 			if ($i <= 1 || !isset($oldData[$date]))
@@ -43,6 +42,7 @@ class EssentialMosprimeDriver extends EssentialDataDriverBase {
 				$result[$date] = $oldData[$date];
 			}
 		}
+		$this->setData(array());
 		$this->setData($result);
 		
 		return true;
@@ -96,7 +96,13 @@ class EssentialMosprimeDriver extends EssentialDataDriverBase {
 			}
 			if (!$foundIndex)
 			{
-				Yii::app()->essentialData->report(get_class($this).' '.$this->name.': indexId not found in xml');
+				$oldData = $this->getData();
+				$time = strtotime($date.' 00:00:00');
+				$previosDate = date('Y-m-d', ($time-(60*60*24)));
+				if (isset($oldData[$previosDate]))
+					$result = $oldData[$previosDate];
+				else
+				{}
 			}
 		}
 		else
