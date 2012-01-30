@@ -53,9 +53,11 @@ return array (
 					'class' => 'EssentialWeatherService',
         			'period' => '* * * * *',
 					'drivers' => array (
-//						'default' => array(
-//							'class' => 'EssentialHmnDriver',
-//						),
+						'default' => array(
+							'class' => 'EssentialHmnDriver',
+							'url1' => "c:\\wamp\\www\\gpor-essentialdata\\www\\files\\xmls\\",
+							'prefix' => '',
+						),
 						'ekb' => array(
 							'class' => 'EssentialHmnDriver',
 							'url1' => "c:\\wamp\\www\\gpor-essentialdata\\www\\files\\xmls\\",

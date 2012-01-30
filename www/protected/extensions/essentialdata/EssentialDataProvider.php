@@ -104,7 +104,7 @@ class EssentialDataProvider extends CApplicationComponent {
 		$data = array (
 			'html' => $message,
 			'text' => '',
-			'subject' => Yii::app()->name() . ': report',
+			'subject' => Yii::app()->name . ': report',
 		);
 		
 		return MailHelper::sendMailToAdmin($data);

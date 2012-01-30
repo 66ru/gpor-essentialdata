@@ -1,13 +1,20 @@
 <?php
+$params = array();
+$localConfigFile = dirname(__FILE__).DS.'../../localConfig/params.php';
+$localDistConfigFile = dirname(__FILE__).DS.'../../localConfig/params-dist.php';
+if (file_exists($localDistConfigFile))
+	$localDistConfig = require($localDistConfigFile);
+else
+	die('local config-dist doesn`t exists at '.$localDistConfigFile."\n");
+if (file_exists($localConfigFile))
+	$localConfig = require($localConfigFile);
+else
+	die('local config doesn`t exists at '.$localConfigFile."\n");
+$params = array_replace_recursive ($localDistConfig, $localConfig);
 
-// uncomment the following to define a path alias
-// Yii::setPathOfAlias('local','path/to/local-folder');
-
-// This is the main Web application configuration. Any writable
-// CWebApplication properties can be configured here.
 return array(
     'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
-    'name'=>'ТопРабота',
+    'name'=>$params['appName'],
     'runtimePath' => dirname(__FILE__).DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'data',
     'language' => 'ru',
     'commandMap' => array(
@@ -43,7 +50,7 @@ return array(
 			'routes'=>array(
 				array(
 					'class'=>'CFileLogRoute',
-					'levels'=>'error',
+					'levels'=>'error, warning, notice',
 //					'levels'=>'error, warning',
 				),
 			),
@@ -55,6 +62,6 @@ return array(
 		'essentialData' => require(dirname(__FILE__).'/essentialData.php'),
 
 	),
-	'params'=>require(dirname(__FILE__).'/params.php'),
+	'params'=>$params,
 	'modules'=>require(dirname(__FILE__).'/modules.php'),
 );

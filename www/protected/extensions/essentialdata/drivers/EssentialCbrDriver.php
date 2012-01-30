@@ -15,7 +15,7 @@ class EssentialCbrDriver extends EssentialDataDriverBase {
 
 	public $days = 30;
 	
-	protected $url = 'http://www.cbr.ru/scripts/_XML_daily.asp';
+	protected $url = 'http://www.cbr.ru/scripts/XML_daily.asp';
 
 	public function run() {	
 		
