@@ -55,7 +55,7 @@ class EssentialHmnDriver extends EssentialDataDriverBase {
 			$currDate = date('Y-m-d', strtotime(implode('-',array_values($array['f_provider']['forecast_to_date']['@attributes']))));
 			$celements = array();
 			$tmp = $array['c'];
-			for ($i=0; $i<sizeof($tmp)/2; $i++)
+			for ($i=0; $i<sizeof($tmp); $i++)
 			{
 				$city_id = $tmp[$i]['@attributes']['id']; 
 				
