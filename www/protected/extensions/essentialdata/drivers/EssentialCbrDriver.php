@@ -92,7 +92,7 @@ class EssentialCbrDriver extends EssentialDataDriverBase {
 				$result['data'][] = array(
 					'charCode' => (string)$item->CharCode,
 					'name' => (string)$item->Name,
-					'value' => (string)$item->Value,
+					'value' => str_replace(',', '.', (string)$item->Value),
 					'nominal' => (string)$item->Nominal,
 				);
 			}
