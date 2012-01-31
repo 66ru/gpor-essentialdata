@@ -80,24 +80,6 @@ return array (
 						),
 					),
 				),
-				'weather3days' => array (
-					'class' => 'EssentialWeather3daysService',
-        			'period' => '* * * * *',
-					'drivers' => array (
-						'default' => array(
-							'class' => 'Essential3daysWeatherDriver',
-							'cityId' => 28440,
-							'driverCurrent' => 'default',
-							'driverWeather' => 'default',
-						),
-						'ekb' => array(
-							'class' => 'Essential3daysWeatherDriver',
-							'cityId' => 28440,
-							'driverCurrent' => 'ekb',
-							'driverWeather' => 'ekb',
-						),
-					),
-				),
 			),
 		);
 ?>
