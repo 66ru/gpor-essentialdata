@@ -14,12 +14,14 @@ $params = array_replace_recursive ($localDistConfig, $localConfig);
 $emptyKeys = array();
 foreach ($params as $k=>$v)
 {
+	if ($k == 'yiiDebug')
+		continue;
 	if (empty($v))
 		$emptyKeys[] = $k;
 }
 if (sizeof($emptyKeys))
 {
-	echo 'Error: params '.implode("\n", $emptyKeys).' required';
+	echo "Error: params\n".implode("\n", $emptyKeys)."\nrequired";
 	die();
 }
 

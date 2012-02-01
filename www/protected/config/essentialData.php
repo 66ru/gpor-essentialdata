@@ -52,15 +52,20 @@ return array (
 					'class' => 'EssentialWeatherService',
         			'period' => '* * * * *',
 					'drivers' => array (
-						'default' => array(
+						'tambov' => array(
 							'class' => 'EssentialHmnDriver',
-							'url1' => "c:\\wamp\\www\\gpor-essentialdata\\www\\files\\xmls\\",
-							'prefix' => '',
+							'url1' => "http://news.hmn.ru/news_out/Reclama_66/",
+							'prefix' => 'vtambove_ru',
 						),
 						'ekb' => array(
 							'class' => 'EssentialHmnDriver',
-							'url1' => "c:\\wamp\\www\\gpor-essentialdata\\www\\files\\xmls\\",
-							'prefix' => '',
+							'url1' => "http://news.hmn.ru/news_out/Reclama_66/",
+							'prefix' => '66_ru',
+						),
+						'perm' => array(
+							'class' => 'EssentialHmnDriver',
+							'url1' => "http://news.hmn.ru/news_out/Reclama_66/",
+							'prefix' => '66_ru',
 						),
 					),
 				),
@@ -68,15 +73,20 @@ return array (
 					'class' => 'EssentialCurrentWeatherService',
         			'period' => '* * * * *',
 					'drivers' => array (
-						'default' => array(
+						'vtambov' => array(
 							'class' => 'EssentialCurrentHmnDriver',
-							'url1' => "c:\\wamp\\www\\gpor-essentialdata\\www\\files\\xmls\\",
-							'prefix' => '',
+							'url1' => "http://news.hmn.ru/news_out/Reclama_66/",
+							'prefix' => 'vtambove_ru',
 						),
 						'ekb' => array(
 							'class' => 'EssentialCurrentEkburgDriver',
-							'url1' => "c:\\wamp\\www\\gpor-essentialdata\\www\\files\\xmls\\",
-							'prefix' => '',
+							'url1' => "http://news.hmn.ru/news_out/Reclama_66/",
+							'prefix' => '66_ru',
+						),
+						'perm' => array(
+							'class' => 'EssentialCurrentEkburgDriver',
+							'url1' => "http://news.hmn.ru/news_out/Reclama_66/",
+							'prefix' => '66_ru',
 						),
 					),
 				),

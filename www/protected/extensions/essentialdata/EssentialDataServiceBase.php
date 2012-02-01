@@ -266,7 +266,27 @@ abstract class EssentialDataServiceBase extends CComponent implements IEssential
 	 * create feed data.
 	 * @return boolean whether data was successfuly created.
 	 */
-	public function run() {	
+	public function run() {
+		$myPid = getmypid();
+		$path = Yii::app()->params['essentialDataFilePath'] . DS . $this->getServiceName();
+		$lastLaunchFile = $path . DS . 'lastLaunch.txt';
+		$lastLaunchTime = 0;
+		if (file_exists($lastLaunchFile))
+			$lastLaunchTime = file_get_contents($lastLaunchFile) + 1;
+
+		$lockFile = $path . DS . 'lock.txt';
+		if (file_exists($lockFile))
+		{
+			$pid = file_get_contents($lockFile);
+			if (posix_getsid($pid))
+			{
+				$this->addLog('process is running');
+				return;
+			}
+		}
+		$this->saveData($lockFile, $myPid);
+		$lastLaunchTime = time();
+		
 		foreach ($this->drivers as $driver => $options)
 		{
 			$driverClass = $this->getDriverClass($driver);
@@ -288,6 +308,8 @@ abstract class EssentialDataServiceBase extends CComponent implements IEssential
 			else
 				throw new EssentialDataException(Yii::t('essentialdata', 'Driver {driver} failed', array('{driver}' => $driver)), 500);
 		}
+		$this->saveData($lastLaunchFile, $lastLaunchTime);
+		unlink($lockFile);
 		return true;
 	}
 
