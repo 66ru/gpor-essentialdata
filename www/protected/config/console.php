@@ -14,9 +14,7 @@ $params = array_replace_recursive ($localDistConfig, $localConfig);
 $emptyKeys = array();
 foreach ($params as $k=>$v)
 {
-	if ($k == 'yiiDebug')
-		continue;
-	if (empty($v))
+	if (is_string($v) && empty($v))
 		$emptyKeys[] = $k;
 }
 if (sizeof($emptyKeys))

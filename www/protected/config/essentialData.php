@@ -4,7 +4,7 @@ return array (
 			'services' => array(
 				'rates' => array (
 					'class' => 'EssentialRatesService',
-        			'period' => '* * * * *',
+        			'period' => '\30 * * * *',
 					'drivers' => array (
 						'default' => array(
 							'class' => 'EssentialCbrDriver',
@@ -13,7 +13,7 @@ return array (
 				),
 				'bankindexes' => array (
 					'class' => 'EssentialBankIndexesService',
-        			'period' => '* * * * *',
+        			'period' => '\30 * * * *',
 					'drivers' => array (
 						'cbref' => array(
 							'class' => 'EssentialCbrefDriver',
@@ -50,7 +50,7 @@ return array (
 				),
 				'weather' => array (
 					'class' => 'EssentialWeatherService',
-        			'period' => '* * * * *',
+        			'period' => '\5 * * * *',
 					'drivers' => array (
 						'tambov' => array(
 							'class' => 'EssentialHmnDriver',
@@ -62,16 +62,11 @@ return array (
 							'url1' => "http://news.hmn.ru/news_out/Reclama_66/",
 							'prefix' => '66_ru',
 						),
-						'perm' => array(
-							'class' => 'EssentialHmnDriver',
-							'url1' => "http://news.hmn.ru/news_out/Reclama_66/",
-							'prefix' => '66_ru',
-						),
 					),
 				),
 				'weathercurrent' => array (
 					'class' => 'EssentialCurrentWeatherService',
-        			'period' => '* * * * *',
+        			'period' => '\5 * * * *',
 					'drivers' => array (
 						'vtambov' => array(
 							'class' => 'EssentialCurrentHmnDriver',
@@ -79,11 +74,6 @@ return array (
 							'prefix' => 'vtambove_ru',
 						),
 						'ekb' => array(
-							'class' => 'EssentialCurrentEkburgDriver',
-							'url1' => "http://news.hmn.ru/news_out/Reclama_66/",
-							'prefix' => '66_ru',
-						),
-						'perm' => array(
 							'class' => 'EssentialCurrentEkburgDriver',
 							'url1' => "http://news.hmn.ru/news_out/Reclama_66/",
 							'prefix' => '66_ru',
