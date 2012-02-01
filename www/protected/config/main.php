@@ -11,6 +11,17 @@ if (file_exists($localConfigFile))
 else
 	die('local config doesn`t exists at '.$localConfigFile."\n");
 $params = array_replace_recursive ($localDistConfig, $localConfig);
+$emptyKeys = array();
+foreach ($params as $k=>$v)
+{
+	if (empty($v))
+		$emptyKeys[] = $k;
+}
+if (sizeof($emptyKeys))
+{
+	echo 'Error: params '.implode(',<br>', $emptyKeys).' required';
+	die();
+}
 
 $mainConfig = array(
 	'basePath'=>dirname(__FILE__).DS.'..',

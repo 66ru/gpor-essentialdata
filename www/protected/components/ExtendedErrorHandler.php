@@ -143,7 +143,7 @@ class ExtendedErrorHandler extends CErrorHandler
 			$traceString.= ")\n";
 		}
 
-		$subject = Yii::app()->name.": PHP Error[$code]: $message";
+		$subject = Yii::app()->name.": PHP Error $code";
 		$fields = array(
 			'message' => "PHP Error[$code]: $message<br/>".nl2br($traceString),
 		);
@@ -175,7 +175,7 @@ class ExtendedErrorHandler extends CErrorHandler
 		$message .=	'<p>'.$exception->getMessage().' ('.$exception->getFile().':'.$exception->getLine().')</p>';
 		$message .=	'<pre>'.$exception->getTraceAsString().'</pre>';
 		
-		$subject = Yii::app()->name.": $exception exception";
+		$subject = Yii::app()->name.": ".get_class($exception)." exception: ".$exception->getMessage();
 		$fields = array(
 			'message' => $message,
 		);
