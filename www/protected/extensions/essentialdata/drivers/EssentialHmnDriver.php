@@ -203,7 +203,7 @@ class EssentialHmnDriver extends EssentialDataDriverBase {
 					'windDirection' => $wind_direct,
 				);
 			 	
-				$result[$currDate][self::hourToDayPeriod($t)] = array($cityItem);
+				$result[$currDate][self::hourToDayPeriod($t)] = $cityItem;
 			}
 		}
 		
