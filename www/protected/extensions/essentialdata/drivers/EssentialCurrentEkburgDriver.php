@@ -12,19 +12,18 @@ class EssentialCurrentEkburgDriver extends EssentialCurrentHmnDriver {
 	protected $name = 'weatherCurrentEkb';
 	protected $title = 'Текущее значение погоды в Екатеринбурге';
 
-	protected $cityId = 28440;
 	protected $ekburgUrl = 'http://www.ekburg.ru/.out/weatherSite/weather66.php';
 	
 	public function run() {
 		parent::run();
 		$data = $this->getData();
-		if (isset($data['data'][$this->cityId]))
+		if (!empty($data))
 		{
 			$c = $this->component->loadUrl($this->ekburgUrl);
 			$ekburgData = CJSON::decode($c);
 			if (is_array($ekburgData) && isset($ekburgData['weather']) && isset($ekburgData['weather']['deg']))
 			{
-				$data['data'][$this->cityId]['current_temp'] = $ekburgData['weather']['deg'];
+				$data['temperature'] = $ekburgData['weather']['deg'];
 				$this->setData($data);
 				return true;
 			}

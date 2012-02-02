@@ -325,10 +325,10 @@ abstract class EssentialDataServiceBase extends CComponent implements IEssential
 		return $xml;
 	}
 	
-	public function loadUrl ($url)
+	public function loadUrl ($url, $dropException = true)
 	{
 		$c = @file_get_contents($url);
-		if (!$c)
+		if (!$c && $dropException)
 			throw new EssentialDataException(Yii::t('essentialdata', 'Error reading url: {url}', array('{url}' => $url)), 500);
 		return $c;
 	}

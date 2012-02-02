@@ -14,18 +14,24 @@ class EssentialCurrentHmnDriver extends EssentialDataDriverBase {
 
 	protected $url1 = 'http://news.hmn.ru/news_out/Reclama_66/';
 	protected $url2 = 'http://news1.hmn.ru/news_out/Reclama_66/';
-	protected $prefix = '66_ru';
+	protected $prefix = false;
+	protected $cityId = false;
 
 	public function run() {
+		if ($this->prefix === false || !$this->cityId)
+			throw new EssentialDataException(Yii::t('essentialdata', get_class($this).': cityId and prefix attributes required', array()), 500);
+
+		$result = array();
+		
 		$file_act = $this->prefix.'/fact_astro.xml';
 
 		$file1 = $this->url1.$file_act;
 		$file2 = $this->url2.$file_act;	
 
 		$xmldata = '';
-		if (!$xmldata = $this->component->loadUrl ($file1))
+		if (!$xmldata = $this->component->loadUrl ($file1, false))
 		{
-			$xmldata = $this->component->loadUrl ($file2);
+			$xmldata = $this->component->loadUrl ($file2, false);
 		}
 			
 		if (!$xmldata)
@@ -36,31 +42,29 @@ class EssentialCurrentHmnDriver extends EssentialDataDriverBase {
 		
 		$array = $this->xmlUnserialize($xmldata);
 
-
-		$cities = array('data'=>array(), 'cities'=>array());
-		for($i=0; $i<20; $i++)
+		foreach($array['fact_astro']['c'] as $i => $v)
 		{
 			if (isset($array['fact_astro']['c'][$i]))
 			{
-				$weather = $array['fact_astro']['c'][$i];
 				$city_id = $array['fact_astro']['c'][$i]['@attributes']['id'];
 
-				$weather['city_id'] = $city_id;
-			
+				if ($this->cityId != $city_id)
+					continue;
+
+				$weather = $array['fact_astro']['c'][$i];
 				list($ico, $text, $weatherStatus) = $this->codeRepl($weather['yc'],$weather['cb']);
 
-				$cities['data'][$city_id] = array(
+				$result = array(
 					'temperature' => (string)intval($weather['tf']),
 					'condition' => $text,
 					'ico' => $this->codeToIcon($ico),
 				);
-				$cities['cities'][$city_id] = $weather['t'];
+				break;
 			}
 		}
+		$this->setData($result);
 		
-		$this->setData($cities);
-		
-		if (!sizeof($cities))
+		if (!sizeof($result))
 			Yii::app()->essentialData->report(get_class($this).': data empty');
 		
 		return true;
