@@ -7,7 +7,7 @@
 	</p>
 	<p>
 	If you think this is a server error, please contact
-    <?php echo CHtml::mailto(Yii::app()->params['adminEmail']); ?>.
+    <?php echo CHtml::mailto(Yii::app()->params['senderEmail']); ?>.
 	</p>
     <p>
     <?php echo CHtml::link('Return to homepage',Yii::app()->homeUrl); ?>
