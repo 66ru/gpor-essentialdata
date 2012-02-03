@@ -25,6 +25,7 @@ class SiteController extends Controller
 					'url' => 'http://' . Yii::app()->params['domain'] .  CHtml::normalizeUrl(array('/site/feed/', 'service' => $service, 'driver' => $k)),
 				);
 			}
+			header("Content-Type: application/json; charset: UTF-8");
 			echo CJSON::encode($res);
 			Yii::app()->end();
 		}
@@ -50,6 +51,7 @@ class SiteController extends Controller
 			$res = $serviceClass->readDriverData($driver);
 			if ($res === null)
 				throw new EssentialDataException(Yii::t('essentialdata', 'Undefined$driver name: {driver}', array('{driver}' => $driver)), 500);
+			header("Content-Type: application/json; charset: UTF-8");
 			echo CJSON::encode($res);
 			Yii::app()->end();
 		}
@@ -69,6 +71,7 @@ class SiteController extends Controller
 				'url' => 'http://' . Yii::app()->params['domain'] .  CHtml::normalizeUrl(array('/site/service/', 'service' => $k)),
 			);
 		}
+		header("Content-Type: application/json; charset: UTF-8");
 		echo CJSON::encode($res);
 		Yii::app()->end();
 	}
