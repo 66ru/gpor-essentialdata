@@ -4,7 +4,7 @@ return array (
 			'services' => array(
 				'rates' => array (
 					'class' => 'EssentialRatesService',
-        			'period' => '\30 * * * *',
+        			'period' => '/30 * * * *',
 					'drivers' => array (
 						'default' => array(
 							'class' => 'EssentialCbrDriver',
@@ -13,7 +13,7 @@ return array (
 				),
 				'bankindexes' => array (
 					'class' => 'EssentialBankIndexesService',
-        			'period' => '\30 * * * *',
+        			'period' => '/30 * * * *',
 					'drivers' => array (
 						'cbref' => array(
 							'class' => 'EssentialCbrefDriver',
@@ -50,7 +50,7 @@ return array (
 				),
 				'weather' => array (
 					'class' => 'EssentialWeatherService',
-        			'period' => '\5 * * * *',
+        			'period' => '/5 * * * *',
 					'drivers' => array (
 						'ekb' => array(
 							'class' => 'EssentialHmnDriver',
@@ -80,7 +80,7 @@ return array (
 				),
 				'weathercurrent' => array (
 					'class' => 'EssentialCurrentWeatherService',
-        			'period' => '\5 * * * *',
+        			'period' => '/5 * * * *',
 					'drivers' => array (
 						'ekb' => array(
 							'class' => 'EssentialCurrentEkburgDriver',
