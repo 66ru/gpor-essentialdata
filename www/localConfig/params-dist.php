@@ -17,7 +17,7 @@ return array(
 
 	'essentialDataFilePath' => '', // Путь до файлов с фидами
 
-	'hmnUrl' => '' // для провайдера hmn сервиса weather
-	'hmnUrl2' => '' // резерв для провайдера hmn сервиса weather
+	'hmnUrl' => '', // для провайдера hmn сервиса weather
+	'hmnUrl2' => '', // резерв для провайдера hmn сервиса weather
 );
 ?>
