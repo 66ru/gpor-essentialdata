@@ -22,7 +22,7 @@ class SiteController extends Controller
 				$res['feeds'][] = array (
 					'name' => $k,
 					'title' => $driver->title,
-					'url' => Yii::app()->params['domain']. '/'. CHtml::normalizeUrl(array('/site/feed/', 'service' => $service, 'driver' => $k)),
+					'url' => 'http://' . Yii::app()->params['domain'] .  CHtml::normalizeUrl(array('/site/feed/', 'service' => $service, 'driver' => $k)),
 				);
 			}
 			echo CJSON::encode($res);
@@ -66,7 +66,7 @@ class SiteController extends Controller
 			$res[] = array (
 				'name' => $k,
 				'title' => $service->title,
-				'url' => Yii::app()->params['domain']. '/'. CHtml::normalizeUrl(array('/site/service/', 'service' => $k)),
+				'url' => 'http://' . Yii::app()->params['domain'] .  CHtml::normalizeUrl(array('/site/service/', 'service' => $k)),
 			);
 		}
 		echo CJSON::encode($res);
