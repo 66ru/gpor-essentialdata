@@ -280,8 +280,7 @@ abstract class EssentialDataServiceBase extends CComponent implements IEssential
 			$pid = file_get_contents($lockFile);
 			if (posix_getsid($pid))
 			{
-				$this->addLog('process is running');
-				return;
+				return false;
 			}
 		}
 		$this->saveData($lockFile, $myPid);

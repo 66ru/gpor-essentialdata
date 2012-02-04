@@ -91,8 +91,6 @@ class EssentialDataProvider extends CApplicationComponent {
 
 		if ( $run )
 		{
-			// TO_DO: check pid
-
         	return $run;
         }
 			

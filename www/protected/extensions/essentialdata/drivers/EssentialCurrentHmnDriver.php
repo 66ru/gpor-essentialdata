@@ -12,8 +12,8 @@ class EssentialCurrentHmnDriver extends EssentialDataDriverBase {
 	protected $name = 'weatherCurrent';
 	protected $title = 'Текущее значение погоды';
 
-	protected $url1 = 'http://news.hmn.ru/news_out/Reclama_66/';
-	protected $url2 = 'http://news1.hmn.ru/news_out/Reclama_66/';
+	protected $url1 = '';
+	protected $url2 = '';
 	protected $prefix = false;
 	protected $cityId = false;
 
@@ -21,6 +21,9 @@ class EssentialCurrentHmnDriver extends EssentialDataDriverBase {
 		if ($this->prefix === false || !$this->cityId)
 			throw new EssentialDataException(Yii::t('essentialdata', get_class($this).': cityId and prefix attributes required', array()), 500);
 
+		if (!$this->url1 && !$this->url2)
+			throw new EssentialDataException(Yii::t('essentialdata', get_class($this).': url1 and/or url2 attributes required', array()), 500);
+		
 		$result = array();
 		
 		$file_act = $this->prefix.'/fact_astro.xml';
