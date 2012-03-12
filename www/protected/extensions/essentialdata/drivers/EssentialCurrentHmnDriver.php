@@ -6,6 +6,7 @@
  */
 
 require_once dirname(dirname(__FILE__)).'/EssentialDataDriverBase.php';
+require_once dirname(dirname(__FILE__)).'/helpers/EssentialCurrentWeatherHelper.php';
 
 class EssentialCurrentHmnDriver extends EssentialDataDriverBase {
 	
@@ -59,9 +60,10 @@ class EssentialCurrentHmnDriver extends EssentialDataDriverBase {
 
 				$result = array(
 					'temperature' => (string)intval($weather['tf']),
-					'condition' => $text,
+					'condition' => $this->weatherStatusToEssentialStatus($text, $ico),
 					'ico' => $this->codeToIcon($ico),
 				);
+                var_dump($this->getComponent());
 				break;
 			}
 		}
@@ -273,5 +275,89 @@ class EssentialCurrentHmnDriver extends EssentialDataDriverBase {
 		else
 			throw new EssentialDataException(Yii::t('essentialdata', 'Icon code '.$code.' not found in '.get_class($this), array()), 500);
 	}
+
+    public function weatherStatusToEssentialStatus($status, $code)
+    {
+		$weatherStatuses = EssentialCurrentWeatherHelper::getWeatherConditions();
+
+        if(in_array($status, $weatherStatuses))
+            return $status;
+
+        $hmnCode2EssentialCode = array(
+            0 => 0,
+            1 => 2,
+            2 => 2,
+            3 => 2,
+            4 => 2,
+            5 => 3,
+            8 => 19,
+            13 => 21,
+            14 => 3,
+            15 => 3,
+            16 => 3,
+            18 => 22,
+            20 => 4,
+            24 => 2,
+            25 => 8,
+            27 => 10,
+            37 => 23,
+            39 => 23,
+            40 => 2,
+            41 => 21,
+            43 => 21,
+            45 => 21,
+            47 => 21,
+            48 => 21,
+            49 => 21,
+            50 => 4,
+            51 => 4,
+            54 => 4,
+            55 => 4,
+            56 => 4,
+            57 => 4,
+            58 => 5,
+            59 => 5,
+            64 => 8,
+            65 => 8,
+            66 => 12,
+            67 => 12,
+            76 => 16,
+            77 => 16,
+            78 => 16,
+            79 => 7,
+            80 => 8,
+            81 => 8,
+            82 => 8,
+            87 => 12,
+            88 => 12,
+            91 => 9,
+            92 => 9,
+            93 => 9,
+            94 => 9,
+            97 => 9,
+            98 => 9,
+            100 => 0,
+            101 => 0,
+            1010 => 0,
+            102 => 0,
+            103 => 2,
+            104 => 2,
+            105 => 2,
+            106 => 2,
+            107 => 3,
+            108 => 3,
+            109 => 0,
+          );
+
+        if(isset($hmnCode2EssentialCode[$code]))
+        {
+            if(isset($weatherStatuses[$hmnCode2EssentialCode[$code]]))
+                return $weatherStatuses[$hmnCode2EssentialCode[$code]];
+            else
+                throw new EssentialDataException(Yii::t('essentialdata', get_class($this).': index of essential weather condition "'.$hmnCode2EssentialCode[$code].'" not found or incorrect', array()), 500);
+        }
+        else
+            throw new EssentialDataException(Yii::t('essentialdata', 'HMN code '.$code.' not found in array hmnCode2EssentialCode. '.get_class($this), array()), 500);
+    }
 
 }

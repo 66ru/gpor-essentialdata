@@ -34,7 +34,7 @@ abstract class EssentialDataDriverBase extends CComponent implements IEssentialD
 	/**
 	 * @var EssentialDataServiceBase the {@link EssentialDataServiceBase} application component.
 	 */
-	private $component;
+	protected $component;
 	
 	/**
 	 * @var array recieved data
