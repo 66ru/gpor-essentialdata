@@ -34,6 +34,8 @@ class EssentialCurrentWeatherHelper
                 22 => "смерчь",
                 23 => "метель",
                 24 => "поземок",
+
+	            100 => "",
     );
 
     public static function getWeatherConditions()

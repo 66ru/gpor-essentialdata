@@ -63,7 +63,6 @@ class EssentialCurrentHmnDriver extends EssentialDataDriverBase {
 					'condition' => $this->weatherStatusToEssentialStatus($text, $ico),
 					'ico' => $this->codeToIcon($ico),
 				);
-                var_dump($this->getComponent());
 				break;
 			}
 		}
@@ -284,7 +283,7 @@ class EssentialCurrentHmnDriver extends EssentialDataDriverBase {
             return $status;
 
         $hmnCode2EssentialCode = array(
-            0 => 0,
+            0 => 100,
             1 => 2,
             2 => 2,
             3 => 2,
@@ -336,17 +335,17 @@ class EssentialCurrentHmnDriver extends EssentialDataDriverBase {
             94 => 9,
             97 => 9,
             98 => 9,
-            100 => 0,
-            101 => 0,
-            1010 => 0,
-            102 => 0,
+            100 => 100,
+            101 => 100,
+            1010 => 100,
+            102 => 100,
             103 => 2,
             104 => 2,
             105 => 2,
             106 => 2,
             107 => 3,
             108 => 3,
-            109 => 0,
+            109 => 100,
           );
 
         if(isset($hmnCode2EssentialCode[$code]))

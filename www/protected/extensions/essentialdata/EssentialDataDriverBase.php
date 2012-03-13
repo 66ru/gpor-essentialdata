@@ -10,6 +10,8 @@ require_once 'IEssentialDataDriver.php';
 /**
  * EssentialDataServiceBase is a base class for providers. 
  * @package application.extensions.essentialdata
+ *
+ * @property EssentialDataServiceBase $component
  */
 abstract class EssentialDataDriverBase extends CComponent implements IEssentialDataDriver {
 	
@@ -34,7 +36,7 @@ abstract class EssentialDataDriverBase extends CComponent implements IEssentialD
 	/**
 	 * @var EssentialDataServiceBase the {@link EssentialDataServiceBase} application component.
 	 */
-	protected $component;
+	private $component;
 	
 	/**
 	 * @var array recieved data
@@ -80,7 +82,7 @@ abstract class EssentialDataDriverBase extends CComponent implements IEssentialD
 	
 	/**
 	 * Returns the {@link EssentialDataServiceBase} application component.
-	 * @return EAuth the {@link EssentialDataServiceBase} application component.
+	 * @return EssentialDataServiceBase the {@link EssentialDataServiceBase} application component.
 	 */
 	public function getComponent() {
 		return $this->component;
