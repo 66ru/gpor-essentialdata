@@ -22,6 +22,9 @@ class EssentialCurrentWeatherService extends EssentialDataServiceBase {
     {
         $data = parent::readDriverData($driver);
 
+	    if($data == null)
+		    return $data;
+
         if($this->checkWeatherCondition($data))
             return $data;
         else
