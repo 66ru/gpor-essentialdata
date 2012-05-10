@@ -9,6 +9,9 @@ return array (
 						'default' => array(
 							'class' => 'EssentialCbrDriver',
 						),
+						'kzr' => array(
+							'class' => 'EssentialKzrDriver',
+						),
 					),
 				),
 				'bankindexes' => array (
@@ -17,6 +20,9 @@ return array (
 					'drivers' => array (
 						'cbref' => array(
 							'class' => 'EssentialCbrefDriver',
+						),
+						'kzrf' => array(
+							'class' => 'EssentialKzrfDriver',
 						),
 						'mosprime3m' => array(
 							'class' => 'EssentialMosprimeDriver',
