@@ -336,16 +336,16 @@ class EssentialCurrentHmnDriver extends EssentialDataDriverBase {
             97 => 9,
             98 => 9,
             100 => 100,
-            101 => 100,
-            1010 => 100,
-            102 => 100,
+            101 => 0,
+            1010 => 1,
+            102 => 1,
             103 => 2,
             104 => 2,
             105 => 2,
             106 => 2,
             107 => 3,
             108 => 3,
-            109 => 100,
+            109 => 3,
           );
 
         if(isset($hmnCode2EssentialCode[$code]))
