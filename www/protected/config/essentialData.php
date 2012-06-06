@@ -82,6 +82,14 @@ return array (
 							'prefix' => 'vtambove_ru',
 							'cityId' => 27947,
 						),
+						'almaty' => array(
+                                                        'class' => 'EssentialHmnDriver',
+                                                        'title' => 'Прогноз погоды в Алматы на 10 дней',
+                                                        'url1' => $params['hmnUrl'],
+                                                        'url2' => $params['hmnUrl2'],
+                                                        'prefix' => 'k1_kz',
+                                                        'cityId' => 36870,
+                                                )
 					),
 				),
 				'weathercurrent' => array (
@@ -111,6 +119,14 @@ return array (
 							'prefix' => 'vtambove_ru',
 							'cityId' => 27947,
 						),
+                                               'almaty' => array(
+                                                        'class' => 'EssentialCurrentHmnDriver',
+                                                        'title' => 'Текущая погода в Алматы',
+                                                        'url1' => $params['hmnUrl'],
+                                                        'url2' => $params['hmnUrl2'],
+                                                        'prefix' => 'k1_kz',
+                                                        'cityId' => 36870,
+                                                ),
 					),
 				),
 			),
