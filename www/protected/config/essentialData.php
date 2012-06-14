@@ -129,6 +129,15 @@ return array (
                                                 ),
 					),
 				),
+				'tv' => array(
+					'class' => 'EssentialTvService',
+					'period' => '0 1 * * *',
+					'drivers' => array(
+						'ekb' => array(
+							'class' => 'EssentialTvDriver',
+						)
+					)
+				)
 			),
 		);
 ?>
