@@ -70,6 +70,7 @@ class EssentialTvDriver extends EssentialDataDriverBase
 			foreach($eventsXml as $eventXml) {
 				$typesMap[(string)$eventXml->Flag->ID] = (string)$eventXml->Flag->Name;
 
+				$event['id'] = (string)$eventXml->ID;
 				$event['start'] = strtotime((string)$eventXml->Start);
 				$event['finish'] = strtotime((string)$eventXml->Finish);
 				$event['title'] = (string)$eventXml->Gate->Title;
