@@ -42,7 +42,16 @@ class EssentialTvDriver extends EssentialDataDriverBase
 		$this->getTVUrl("http://$this->host/xchenel.php?login=$this->login&pass=$this->pass&show=$this->show&xmltv=$this->xmlTV");
 
 		$tvMap = array();
-		$typesMap = array();
+		$typesMap = array(
+			'1' => 'Фильм',
+			'2' => 'Сериал',
+			'3' => 'Спорт',
+			'4' => 'Новости',
+			'5' => 'Детям',
+			'10' => 'Досуг',
+			'20' => 'Познавательное',
+			'1000' => 'Остальное',
+		);
 
 		$efirDate = '2012-06-18'; // this value doesn't affect, reduntant?
 		$channels = $this->getTVUrl("http://$this->host/standart/list_channel.php?efirdate=$efirDate&login=$this->login&pass=$this->pass");
@@ -76,10 +85,11 @@ class EssentialTvDriver extends EssentialDataDriverBase
 				$event['title'] = (string)$eventXml->Gate->Title;
 				$event['subtitle'] = (string)$eventXml->Gate->SubTitle;
 				$event['typeId'] = (string)$eventXml->Flag->ID;
-				$event['typeName'] = (string)$eventXml->Flag->Name;
 				$event['info'] = (string)$eventXml->Gate->Info;
 				$event['country'] = (string)$eventXml->Gate->Country;
 				$event['company'] = (string)$eventXml->Gate->Company;
+				$event['genre'] = (string)$eventXml->Gate->Genre;
+				$event['year'] = (string)$eventXml->Gate->Year;
 				$event['images'] = array();
 				if (!empty($eventXml->Gallery))
 					foreach($eventXml->Gallery->Image as $image) {
@@ -87,9 +97,9 @@ class EssentialTvDriver extends EssentialDataDriverBase
 					}
 				$event['directors'] = array();
 				$event['actors'] = array();
-				if (!empty($eventXml->Humans))
-					foreach($eventXml->Humans as $human) {
-						if ($human->Amplois->ID == 15) // Режиссер
+				if (!empty($eventXml->Gate->Humans))
+					foreach($eventXml->Gate->Humans->Human as $human) {
+						if ($human->Amplois->ID == 15 || $human->Amplois->ID == 2) // Режиссер
 							$event['directors'][] = (string)$human->Name;
 						elseif ($human->Amplois->ID == 1) // Актер
 							$event['actors'][] = (string)$human->Name;
@@ -106,7 +116,10 @@ class EssentialTvDriver extends EssentialDataDriverBase
 			}
 		}
 
-		$this->setData($tvMap);
+		$this->setData(array(
+			'tvMap' => $tvMap,
+			'typesMap' => $typesMap,
+		));
 		return true;
 	}
 
