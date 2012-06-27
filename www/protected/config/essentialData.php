@@ -119,16 +119,25 @@ return array (
 							'prefix' => 'vtambove_ru',
 							'cityId' => 27947,
 						),
-                                               'almaty' => array(
-                                                        'class' => 'EssentialCurrentHmnDriver',
-                                                        'title' => 'Текущая погода в Алматы',
-                                                        'url1' => $params['hmnUrl'],
-                                                        'url2' => $params['hmnUrl2'],
-                                                        'prefix' => 'k1_kz',
-                                                        'cityId' => 36870,
-                                                ),
+						'almaty' => array(
+							'class' => 'EssentialCurrentHmnDriver',
+							'title' => 'Текущая погода в Алматы',
+							'url1' => $params['hmnUrl'],
+							'url2' => $params['hmnUrl2'],
+							'prefix' => 'k1_kz',
+							'cityId' => 36870,
+						),
 					),
 				),
+				'tv' => array(
+					'class' => 'EssentialTvService',
+					'period' => '1 * * * *',
+					'drivers' => array(
+						'ekb' => array(
+							'class' => 'EssentialTvDriver',
+						)
+					)
+				)
 			),
 		);
 ?>
