@@ -59,7 +59,7 @@ class EssentialCurrentHmnDriver extends EssentialDataDriverBase {
 				list($ico, $text, $weatherStatus) = $this->codeRepl($weather['yc'],$weather['cb']);
 
 				$result = array(
-					'temperature' => (string)intval($weather['tf']),
+					'temperature' => (string)round($weather['tf']),
 					'condition' => $this->weatherStatusToEssentialStatus($text, $ico),
 					'ico' => $this->codeToIcon($ico),
 				);
