@@ -9,6 +9,8 @@
 class EssentialCurrentWeatherHelper
 {
     // NOTE: Статусы не должны повторяться, т.к. в дальнейшем используются в качестве ключей
+    // NOTE: Статусы в UTF8
+    
     private static $weatherConditions = array(
         0 => "ясно",
         1 => "переменная облачность",
