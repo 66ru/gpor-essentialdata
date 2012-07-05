@@ -18,7 +18,8 @@ class EssentialCurrentHmnDriver extends EssentialDataDriverBase {
 	protected $prefix = false;
 	protected $cityId = false;
 
-	public function run() {
+	public function run()
+	{
 		if ($this->prefix === false || !$this->cityId)
 			throw new EssentialDataException(Yii::t('essentialdata', get_class($this).': cityId and prefix attributes required', array()), 500);
 
@@ -56,12 +57,11 @@ class EssentialCurrentHmnDriver extends EssentialDataDriverBase {
 					continue;
 
 				$weather = $array['fact_astro']['c'][$i];
-				list($ico, $text, $weatherStatus) = $this->codeRepl($weather['yc'],$weather['cb']);
+				list($status, $text, $weatherStatus) = $this->codeRepl($weather['yc'],$weather['cb']);
 
 				$result = array(
-					'temperature' => (string)round($weather['tf']),
-					'condition' => $this->weatherStatusToEssentialStatus($text, $ico),
-					'ico' => $this->codeToIcon($ico),
+					'temperature'	=> (string)round($weather['tf']),
+					'condition'		=> $this->weatherStatusToEssentialStatus($text, $status),
 				);
 				break;
 			}
@@ -79,6 +79,10 @@ class EssentialCurrentHmnDriver extends EssentialDataDriverBase {
 		return XML2Array::createArray ($xml);
 	}
 
+	/**
+	 * Метод для белой и черной магии! Делает волшебное зелье из компонентов Yc и Cb
+	 * NOTE: WeatherStatus на выходе вообще не нужен сейчас!
+	 */
 	protected function codeRepl ($Yc,$Cb)
 	{
 		$clouds_descr=array(
@@ -143,8 +147,7 @@ class EssentialCurrentHmnDriver extends EssentialDataDriverBase {
 				$rtext = $codes_descr[$rico];
 			}
 		}
-		return array($rico,$rtext,$weatherStatus);
-		
+		return array($rico,$rtext,$weatherStatus);		
 	}
 
 	protected function codeToIcon ($code)
@@ -165,7 +168,7 @@ class EssentialCurrentHmnDriver extends EssentialDataDriverBase {
 		*/
 		
 		// HNM Icons -> 66 Icons
-		$code_to_icon = array(
+/*		$code_to_icon = array(
 			'0'=>0,
 			'100' => 0,
 			'101' => 0,
@@ -272,7 +275,7 @@ class EssentialCurrentHmnDriver extends EssentialDataDriverBase {
 		if (isset($code_to_icon[$code]))
 			return $code_to_icon[$code];
 		else
-			throw new EssentialDataException(Yii::t('essentialdata', 'Icon code '.$code.' not found in '.get_class($this), array()), 500);
+			throw new EssentialDataException(Yii::t('essentialdata', 'Icon code '.$code.' not found in '.get_class($this), array()), 500);*/
 	}
 
     public function weatherStatusToEssentialStatus($status, $code)
