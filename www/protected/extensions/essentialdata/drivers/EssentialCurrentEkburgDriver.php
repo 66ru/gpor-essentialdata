@@ -23,7 +23,7 @@ class EssentialCurrentEkburgDriver extends EssentialCurrentHmnDriver {
 			$ekburgData = CJSON::decode($c);
 			if (is_array($ekburgData) && isset($ekburgData['weather']) && isset($ekburgData['weather']['deg']))
 			{
-				$data['temperature'] = $ekburgData['weather']['deg'];
+				$data['temperature'] = (string)round($ekburgData['weather']['deg']);
 				$this->setData($data);
 				return true;
 			}
