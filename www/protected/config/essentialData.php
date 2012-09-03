@@ -83,13 +83,21 @@ return array (
 							'cityId' => 27947,
 						),
 						'almaty' => array(
-                                                        'class' => 'EssentialHmnDriver',
-                                                        'title' => 'Прогноз погоды в Алматы на 10 дней',
-                                                        'url1' => $params['hmnUrl'],
-                                                        'url2' => $params['hmnUrl2'],
-                                                        'prefix' => 'k1_kz',
-                                                        'cityId' => 36870,
-                                                )
+								'class' => 'EssentialHmnDriver',
+								'title' => 'Прогноз погоды в Алматы на 10 дней',
+								'url1' => $params['hmnUrl'],
+								'url2' => $params['hmnUrl2'],
+								'prefix' => 'k1_kz',
+								'cityId' => 36870,
+						),
+						'omsk' => array(
+								'class' => 'EssentialHmnDriver',
+								'title' => 'Прогноз погоды в Омске на 10 дней',
+								'url1' => $params['hmnUrl'],
+								'url2' => $params['hmnUrl2'],
+								'prefix' => 'om1_ru',
+								'cityId' => 28698,
+						)
 					),
 				),
 				'weathercurrent' => array (
@@ -126,6 +134,14 @@ return array (
 							'url2' => $params['hmnUrl2'],
 							'prefix' => 'k1_kz',
 							'cityId' => 36870,
+						),
+						'omsk' => array(
+							'class' => 'EssentialCurrentHmnDriver',
+							'title' => 'Текущая погода в Омске',
+							'url1' => $params['hmnUrl'],
+							'url2' => $params['hmnUrl2'],
+							'prefix' => 'om1_ru',
+							'cityId' => 28698,
 						),
 					),
 				),
