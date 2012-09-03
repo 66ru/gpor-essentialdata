@@ -47,24 +47,20 @@ class EssentialCurrentHmnDriver extends EssentialDataDriverBase {
 		
 		$array = $this->xmlUnserialize($xmldata);
 
-		foreach($array['fact_astro']['c'] as $i => $v)
+		if (isset($array['fact_astro']['c']))
 		{
-			if (isset($array['fact_astro']['c'][$i]))
-			{
-				$city_id = $array['fact_astro']['c'][$i]['@attributes']['id'];
+			$city_id = $array['fact_astro']['c']['@attributes']['id'];
 
-				if ($this->cityId != $city_id)
-					continue;
+			if ($this->cityId != $city_id)
+				continue;
 
-				$weather = $array['fact_astro']['c'][$i];
-				list($status, $text, $weatherStatus) = $this->codeRepl($weather['yc'],$weather['cb']);
+			$weather = $array['fact_astro']['c'];
+			list($status, $text, $weatherStatus) = $this->codeRepl($weather['yc'],$weather['cb']);
 
-				$result = array(
-					'temperature'	=> (string)round($weather['tf']),
-					'condition'		=> $this->weatherStatusToEssentialStatus($text, $status),
-				);
-				break;
-			}
+			$result = array(
+				'temperature'	=> (string)round($weather['tf']),
+				'condition'		=> $this->weatherStatusToEssentialStatus($text, $status),
+			);
 		}
 		$this->setData($result);
 		
