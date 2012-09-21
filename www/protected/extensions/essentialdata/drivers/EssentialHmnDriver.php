@@ -51,7 +51,7 @@ class EssentialHmnDriver extends EssentialDataDriverBase {
 			{
 				$xmldata = $this->component->loadUrl ($file2, false);
 			}
-			
+
 			if (!$xmldata)
 			{
 				Yii::app()->essentialData->report(get_class($this).': url '.$file1.' return empty result');
@@ -92,7 +92,7 @@ class EssentialHmnDriver extends EssentialDataDriverBase {
 		 	$wind_direct = $this->windDirect($itemtime['dwd']);
 				
 			$cityItemDay = array(
-				'temperature' => $itemtime['td'],
+				'temperature' => (string)round($itemtime['td']),
 				'relwet' => isset($itemtime['hum_d'])?$itemtime['hum_d']:0,
 				'pressure' => $itemtime['pd'],
 				'wind' => $itemtime['dws'],
@@ -114,7 +114,7 @@ class EssentialHmnDriver extends EssentialDataDriverBase {
 		 	$wind_direct = $this->windDirect($itemtime['nwd']);	
 
 			$cityItemNight = array(
-				'temperature' => $itemtime['tn'],
+				'temperature' => (string)round($itemtime['tn']),
 				'relwet' => $itemtime['hum_n'],
 				'pressure' => $itemtime['pn'],
 				'wind' => $itemtime['nws'],
@@ -197,7 +197,7 @@ class EssentialHmnDriver extends EssentialDataDriverBase {
 			 	$p = $this->getPrecipitation($itemtime['w']);
 				 	
 				$cityItem = array(
-					'temperature' => $itemtime['tf'],
+					'temperature' => (string)round($itemtime['tf']),
 					'relwet' => $itemtime['hum'],
 					'pressure' => $itemtime['p'],
 					'wind' => $itemtime['ws'],
