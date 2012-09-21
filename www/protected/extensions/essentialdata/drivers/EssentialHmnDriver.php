@@ -93,7 +93,7 @@ class EssentialHmnDriver extends EssentialDataDriverBase {
 				
 			$cityItemDay = array(
 				'temperature' => $itemtime['td'],
-				'relwet' => $itemtime['hum_d'],
+				'relwet' => isset($itemtime['hum_d'])?$itemtime['hum_d']:0,
 				'pressure' => $itemtime['pd'],
 				'wind' => $itemtime['dws'],
 				'cloudiness' => $c,
