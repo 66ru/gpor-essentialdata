@@ -50,7 +50,7 @@ class SiteController extends Controller
 			
 			$res = $serviceClass->readDriverData($driver);
 			if ($res === null)
-				throw new EssentialDataException(Yii::t('essentialdata', 'Undefined driver name: {driver}', array('{driver}' => $driver)), 500);
+				throw new CHttpException(404, 'Страница не найдена');
 			header("Content-Type: application/json; charset: UTF-8");
 			echo CJSON::encode($res);
 			Yii::app()->end();
