@@ -137,6 +137,15 @@ return array (
 							'class' => 'EssentialTvDriver',
 						)
 					)
+				),
+				'tvfriendly' => array(
+					'class' => 'EssentialTvFriendlyService',
+					'period' => '1 * * * *',
+					'drivers' => array(
+						'ekb' => array(
+							'class' => 'EssentialTvFriendlyDriver',
+						)
+					)
 				)
 			),
 		);
