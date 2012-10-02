@@ -151,7 +151,7 @@ abstract class EssentialDataServiceBase extends CComponent implements IEssential
 	public function getDriverClass($driver) {
 		$driver = strtolower($driver);
 		if (!isset($this->drivers[$driver]))
-			throw new EssentialDataException(Yii::t('essentialdata', 'Undefined$driver name: {driver}', array('{driver}' => $driver)), 500);
+			throw new CHttpException(404, 'Страница не найдена');
 		$driver = $this->drivers[$driver];
 		
 		$class = $driver['class'];
@@ -185,7 +185,7 @@ abstract class EssentialDataServiceBase extends CComponent implements IEssential
 	public function getDriverPath ($driver)
 	{
 		if (!isset($this->drivers[$driver]))
-			throw new EssentialDataException(Yii::t('essentialdata', 'Undefined$driver name: {driver}', array('{driver}' => $driver)), 500);
+			throw new CHttpException(404, 'Страница не найдена');
 
 		return Yii::app()->params['essentialDataFilePath'] . DS . $this->getServiceName() . DS . $driver . '.json';
 	}

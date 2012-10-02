@@ -40,7 +40,7 @@ class EssentialDataProvider extends CApplicationComponent {
 		$service = strtolower($service);
 		$services = $this->getServices();
 		if (!isset($services[$service]))
-			throw new EssentialDataException(Yii::t('essentialdata', 'Undefined service name: {service}', array('{service}' => $service)), 500);
+			throw new CHttpException(404, 'Страница не найдена');
 		return $services[$service];
 	}
 	
@@ -52,7 +52,7 @@ class EssentialDataProvider extends CApplicationComponent {
 	public function getServiceClass($service) {
 		$service = strtolower($service);
 		if (!isset($this->services[$service]))
-			throw new EssentialDataException(Yii::t('essentialdata', 'Undefined service name: {service}', array('{service}' => $service)), 500);
+			throw new CHttpException(404, 'Страница не найдена');
 		$service = $this->services[$service];
 		
 		$class = $service['class'];
