@@ -90,10 +90,10 @@ class EssentialHmnDriver extends EssentialDataDriverBase {
 		 	$p = $this->getPrecipitation($itemtime['dw']);		
 		 	
 		 	$wind_direct = $this->windDirect($itemtime['dwd']);
-
+				
 			$cityItemDay = array(
 				'temperature' => (string)round($itemtime['td']),
-				'relwet' => $itemtime['hum_d'],
+				'relwet' => isset($itemtime['hum_d'])?$itemtime['hum_d']:0,
 				'pressure' => $itemtime['pd'],
 				'wind' => $itemtime['dws'],
 				'cloudiness' => $c,
