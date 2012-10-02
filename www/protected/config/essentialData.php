@@ -151,6 +151,13 @@ return array (
 					'drivers' => array(
 						'ekb' => array(
 							'class' => 'EssentialTvDriver',
+							'login' => 'tv6035',
+							'pass' => 'YdFbBDsbB1',
+						),
+						'almaty' => array(
+							'class' => 'EssentialTvDriver',
+							'login' => 'tv6403',
+							'pass' => 'AZAZympvjt',
 						)
 					)
 				)

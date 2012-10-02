@@ -10,9 +10,11 @@ class EssentialTvDriver extends EssentialDataDriverBase
 	/** @var resource Curl instance */
 	private $c;
 
-	public $host = "xmltv.s-tv.ru";
-	public $show = "2"; //Отобразить в формате 1-HTML, 2-XML.
-	public $xmlTV = "8"; //Форматы программ (text, xmltv, xml, xml1,xml2, xls, text2, xmlfull), 1000-Ваш индивидуальный формат (если заказывали).
+	protected $host = "xmltv.s-tv.ru";
+	protected $login = "";  	
+	protected $pass = "";
+	protected $show = "2"; //Отобразить в формате 1-HTML, 2-XML.
+	protected $xmlTV = "8"; //Форматы программ (text, xmltv, xml, xml1,xml2, xls, text2, xmlfull), 1000-Ваш индивидуальный формат (если заказывали).
 
 	/**
 	 * @var int Передачи до 4 часов утра принадлежат вчерашнему дню
@@ -36,10 +38,10 @@ class EssentialTvDriver extends EssentialDataDriverBase
 
 	public function run()
 	{
-		$login = Yii::app()->params['s-tv.login'];
-		$pass = Yii::app()->params['s-tv.pass'];
+		if (!$this->login && !$this->pass)
+			throw new EssentialDataException(Yii::t('essentialdata', get_class($this).': login and pass attributes required', array()), 500);
 		// auth
-		$this->getTVUrl("http://$this->host/xchenel.php?login=$login&pass=$pass&show=$this->show&xmltv=$this->xmlTV");
+		$this->getTVUrl("http://$this->host/xchenel.php?login=$this->login&pass=$this->pass&show=$this->show&xmltv=$this->xmlTV");
 
 		$tvMap = array();
 		$typesMap = array(
@@ -54,7 +56,7 @@ class EssentialTvDriver extends EssentialDataDriverBase
 		);
 
 		$efirDate = '2012-06-18'; // this value doesn't affect, reduntant?
-		$channels = $this->getTVUrl("http://$this->host/standart/list_channel.php?efirdate=$efirDate&login=$login&pass=$pass");
+		$channels = $this->getTVUrl("http://$this->host/standart/list_channel.php?efirdate=$efirDate&login=$this->login&pass=$this->pass");
 		$channelsXml = simplexml_load_string($channels);
 		foreach ($channelsXml->File as $channelXml) {
 			$channelId = (string)$channelXml->ChannelSymbId;
