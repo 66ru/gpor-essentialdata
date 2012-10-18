@@ -144,6 +144,8 @@ return array (
 					'drivers' => array(
 						'ekb' => array(
 							'class' => 'EssentialTvFriendlyDriver',
+							'login' => 'tv6035',
+							'pass' => 'YdFbBDsbB1',
 						)
 					)
 				)
