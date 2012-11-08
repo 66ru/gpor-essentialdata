@@ -95,10 +95,19 @@ class EssentialTvDriver extends EssentialDataDriverBase
 			{
 				$typesMap[(string)$eventXml->Flag->ID] = (string)$eventXml->Flag->Name;
 
+				// Возрастные ограничения
+				$pg = '';
+				if (isset($eventXml->Gate->PG->sn))
+				{
+					$pg = trim((string)$eventXml->Gate->PG->sn);
+					if (!empty($pg))
+						$pg = ' ('.$pg.')';
+				}
+
 				$event['id']			= (string)$eventXml->ID;
 				$event['start']			= strtotime((string)$eventXml->Start);
 				$event['finish']		= strtotime((string)$eventXml->Finish);
-				$event['title']			= (string)$eventXml->Gate->Title;
+				$event['title']			= (string)$eventXml->Gate->Title . $pg;
 				$event['subtitle']		= (string)$eventXml->Gate->SubTitle;
 				$event['typeId']		= (string)$eventXml->Flag->ID;
 				$event['info']			= (string)$eventXml->Gate->Info;
@@ -107,6 +116,7 @@ class EssentialTvDriver extends EssentialDataDriverBase
 				$event['genre']			= (string)$eventXml->Gate->Genre;
 				$event['year']			= (string)$eventXml->Gate->Year;
 				$event['images']		= array();
+				var_dump($event['title']);
 				if (!empty($eventXml->Gallery))
 				{
 					foreach($eventXml->Gallery->Image as $image)
