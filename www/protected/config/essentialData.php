@@ -158,7 +158,12 @@ return array (
 							'class' => 'EssentialTvDriver',
 							'login' => 'tv6403',
 							'pass' => 'AZAZympvjt',
-						)
+						),
+                        'gorodche' => array(
+                            'class' => 'EssentialTvDriver',
+                            'login' => 'tv6480',
+                            'pass' => 'k07pqHh0lJ',
+                        ),
 					)
 				)
 			),
