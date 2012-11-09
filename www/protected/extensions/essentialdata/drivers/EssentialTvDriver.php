@@ -116,7 +116,6 @@ class EssentialTvDriver extends EssentialDataDriverBase
 				$event['genre']			= (string)$eventXml->Gate->Genre;
 				$event['year']			= (string)$eventXml->Gate->Year;
 				$event['images']		= array();
-				var_dump($event['title']);
 				if (!empty($eventXml->Gallery))
 				{
 					foreach($eventXml->Gallery->Image as $image)
