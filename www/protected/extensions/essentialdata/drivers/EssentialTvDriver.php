@@ -40,8 +40,9 @@ class EssentialTvDriver extends EssentialDataDriverBase
 	{
 		if (!$this->login && !$this->pass)
 			throw new EssentialDataException(Yii::t('essentialdata', get_class($this).': login and pass attributes required', array()), 500);
-		// auth
-		$this->getTVUrl("http://$this->host/xchenel.php?login=$this->login&pass=$this->pass&show=$this->show&xmltv=$this->xmlTV");
+
+		// Авторизуемся и получаем каналы
+		$channelsArr = $this->getChannels();
 
 		$tvMap = array();
 		$typesMap = array(
@@ -55,61 +56,89 @@ class EssentialTvDriver extends EssentialDataDriverBase
 			'1000' => 'Остальное',
 		);
 
-		$efirDate = '2012-06-18'; // this value doesn't affect, reduntant?
-		$channels = $this->getTVUrl("http://$this->host/standart/list_channel.php?efirdate=$efirDate&login=$this->login&pass=$this->pass");
+		$efirDate = date( "Y-m-d" ); // this value doesn't affect, reduntant?
+		$getParams = 'efirdate='.$efirDate.'&login='.$this->login.'&pass='.$this->pass;
+		$channels = $this->getTVUrl("http://$this->host/standart/list_channel.php?".$getParams);
 		$channelsXml = simplexml_load_string($channels);
-		foreach ($channelsXml->File as $channelXml) {
+
+		foreach ($channelsXml->File as $channelXml)
+		{
 			$channelId = (string)$channelXml->ChannelSymbId;
 			$tvMap[$channelId]['name'] = (string)$channelXml->ChannelName;
 			$tvMap[$channelId]['events'] = array();
 
-			// removing userid parametr from url
+			// removing userid parameter from url
 			$eventsUrl = (string)$channelXml->Name;
 			$query = parse_url($eventsUrl, PHP_URL_QUERY);
 			$query = html_entity_decode($query);
 			$query = explode('&', $query);
-			foreach ($query as $id => $param) {
+			foreach ($query as $id => $param)
+			{
 				$param = explode('=', $param);
 				if ($param[0] == 'userid')
 					unset($query[$id]);
 			}
+
+			// Добавляем временную зону
+			$timeZone = 0;
+			if (isset($channelsArr[$channelId]))
+				$timeZone = (int)$channelsArr[$channelId]['timeZone'];
+			$query[] = 'sh='.(string)$timeZone;
+
 			$query = implode('&',$query);
 			$eventsUrl = substr($eventsUrl,0,strpos($eventsUrl,'?')+1) . $query;
 
 			$events = $this->getTVUrl($eventsUrl);
 			$eventsXml = simplexml_load_string($events);
-			foreach($eventsXml as $eventXml) {
+
+			foreach($eventsXml as $eventXml)
+			{
 				$typesMap[(string)$eventXml->Flag->ID] = (string)$eventXml->Flag->Name;
 
-				$event['id'] = (string)$eventXml->ID;
-				$event['start'] = strtotime((string)$eventXml->Start);
-				$event['finish'] = strtotime((string)$eventXml->Finish);
-				$event['title'] = (string)$eventXml->Gate->Title;
-				$event['subtitle'] = (string)$eventXml->Gate->SubTitle;
-				$event['typeId'] = (string)$eventXml->Flag->ID;
-				$event['info'] = (string)$eventXml->Gate->Info;
-				$event['country'] = (string)$eventXml->Gate->Country;
-				$event['company'] = (string)$eventXml->Gate->Company;
-				$event['genre'] = (string)$eventXml->Gate->Genre;
-				$event['year'] = (string)$eventXml->Gate->Year;
-				$event['images'] = array();
+				// Возрастные ограничения
+				$pg = '';
+				if (isset($eventXml->Gate->PG->sn))
+				{
+					$pg = trim((string)$eventXml->Gate->PG->sn);
+					if (!empty($pg))
+						$pg = ' ('.$pg.')';
+				}
+
+				$event['id']			= (string)$eventXml->ID;
+				$event['start']			= strtotime((string)$eventXml->Start);
+				$event['finish']		= strtotime((string)$eventXml->Finish);
+				$event['title']			= (string)$eventXml->Gate->Title . $pg;
+				$event['subtitle']		= (string)$eventXml->Gate->SubTitle;
+				$event['typeId']		= (string)$eventXml->Flag->ID;
+				$event['info']			= (string)$eventXml->Gate->Info;
+				$event['country']		= (string)$eventXml->Gate->Country;
+				$event['company']		= (string)$eventXml->Gate->Company;
+				$event['genre']			= (string)$eventXml->Gate->Genre;
+				$event['year']			= (string)$eventXml->Gate->Year;
+				$event['images']		= array();
 				if (!empty($eventXml->Gallery))
-					foreach($eventXml->Gallery->Image as $image) {
+				{
+					foreach($eventXml->Gallery->Image as $image)
 						$event['images'][] = (string)$image;
-					}
+				}
 				$event['directors'] = array();
 				$event['actors'] = array();
 				if (!empty($eventXml->Gate->Humans))
-					foreach($eventXml->Gate->Humans->Human as $human) {
+				{
+					foreach($eventXml->Gate->Humans->Human as $human)
+					{
 						if ($human->Amplois->ID == 15 || $human->Amplois->ID == 2) // Режиссер
 							$event['directors'][] = (string)$human->Name;
 						elseif ($human->Amplois->ID == 1) // Актер
 							$event['actors'][] = (string)$human->Name;
 					}
+				}
 
 				foreach($event as $id => $entry)
+				{
 					if (empty($entry))
 						unset($event[$id]);
+				}
 
 				$eventDay = date('Y-m-d', strtotime((string)$eventXml->Start) - $this->dayShift);
 				$tvMap[$channelId]['events'][$eventDay][] = $event;
@@ -125,7 +154,8 @@ class EssentialTvDriver extends EssentialDataDriverBase
 		return true;
 	}
 
-	function getTVUrl($url) {
+	function getTVUrl($url)
+	{
 		$c = $this->c;
 		curl_setopt($c, CURLOPT_URL, $url);
 		curl_setopt($c, CURLOPT_USERAGENT, $this->userAgent);
@@ -135,5 +165,33 @@ class EssentialTvDriver extends EssentialDataDriverBase
 		curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($c, CURLOPT_CONNECTTIMEOUT, $this->curlTimeout);
 		return curl_exec($c);
+	}
+
+	/**
+	 * Авторизуемся и получаемсписок каналов
+	 */
+	private function getChannels()
+	{
+		$getParams = 'login='.$this->login.'&pass='.$this->pass.'&show='.$this->show.'&xmltv='.$this->xmlTV;
+		$channels = $this->getTVUrl("http://$this->host/xchenel.php?".$getParams);
+		$channelsXml = simplexml_load_string($channels);
+		if (!$channelsXml)
+			return array();
+
+		$arr = array();
+		foreach ($channelsXml as $channelEntry)
+		{
+			$channelNameId = $channelEntry->ChannelID;
+			if (preg_match('/\?.*prg=(\d*).*sh=(\d*)/', $channelEntry->Name, $matches))
+			{
+				$channelId = $matches[1];
+				$channelTimeZone = $matches[2];
+				$arr[(string)$channelNameId] = array(
+					'prgId' => (int)$channelId,
+					'timeZone' => $channelTimeZone,
+				);
+			}
+		}
+		return $arr;
 	}
 }
