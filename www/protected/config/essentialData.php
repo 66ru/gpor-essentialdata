@@ -97,7 +97,15 @@ return array (
 								'url2' => $params['hmnUrl2'],
 								'prefix' => 'om1_ru',
 								'cityId' => 28698,
-						)
+						),
+                        'gorodche' => array(
+                                'class' => 'EssentialHmnDriver',
+                                'title' => 'Прогноз погоды в Череповце на 10 дней',
+                                'url1' => $params['hmnUrl'],
+                                'url2' => $params['hmnUrl2'],
+                                'prefix' => 'gorodche_ru',
+                                'cityId' => 27113,
+                        )
 					),
 				),
 				'weathercurrent' => array (
@@ -143,6 +151,14 @@ return array (
 							'prefix' => 'om1_ru',
 							'cityId' => 28698,
 						),
+                        'gorodche' => array(
+                            'class' => 'EssentialCurrentHmnDriver',
+                            'title' => 'Текущая погода в Череповце',
+                            'url1' => $params['hmnUrl'],
+                            'url2' => $params['hmnUrl2'],
+                            'prefix' => 'gorodche_ru',
+                            'cityId' => 27113,
+                        ),
 					),
 				),
 				'tv' => array(
