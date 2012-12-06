@@ -107,9 +107,9 @@ class EssentialHmnDriver extends EssentialDataDriverBase {
 						'windDirection' => $wind_direct,
 				);
 				if($this->cityId == $city_id)
-					$result[$currDate] = array('day' => $cityItemDay, 'night' => $cityItemNight);
+					$result[$currDate] = array('day' => $cityItemDay, 'night' => $cityItemNight, 'name'=>$feedItem['t']);
 				else
-					$result[$currDate]['other'][$city_id] = array('day' => $cityItemDay, 'night' => $cityItemNight);
+					$result[$currDate]['other'][$city_id] = array('day' => $cityItemDay, 'night' => $cityItemNight, 'name'=>$feedItem['t']);
 			}
 		}
 		
@@ -196,13 +196,19 @@ class EssentialHmnDriver extends EssentialDataDriverBase {
 						'windDirection' => $wind_direct,
 					);
 					if($this->cityId==$city_id)
+					{
 						$result[$currDate][self::hourToDayPeriod($t)] = $cityItem;
+						$result[$currDate]['name'] = $feedItem['t'];
+					}
 					else
+					{
+						$result[$currDate]['other'][$city_id]['name'] = $feedItem['t'];
 						$result[$currDate]['other'][$city_id][self::hourToDayPeriod($t)] = $cityItem;
+					}
 				}
 			}
 		}
-		
+
 		$this->setData($result);
 		
 		if (!sizeof($result))

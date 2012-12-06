@@ -47,25 +47,38 @@ class EssentialCurrentHmnDriver extends EssentialDataDriverBase {
 		
 		$array = $this->xmlUnserialize($xmldata);
 
+		$items = false;
+		$result = false;
+
 		foreach($array['fact_astro']['c'] as $i => $v)
 		{
 			if (isset($array['fact_astro']['c'][$i]))
 			{
 				$city_id = $array['fact_astro']['c'][$i]['@attributes']['id'];
+				$city_name = $array['fact_astro']['c'][$i]['t'];
 
-				if ($this->cityId != $city_id)
-					continue;
+				$items[$city_id] = $array['fact_astro']['c'][$i];
+				$items[$city_id]['name'] = $city_name;
 
-				$weather = $array['fact_astro']['c'][$i];
-				list($status, $text, $weatherStatus) = $this->codeRepl($weather['yc'],$weather['cb']);
-
-				$result = array(
-					'temperature'	=> (string)round($weather['tf']),
-					'condition'		=> $this->weatherStatusToEssentialStatus($text, $status),
-				);
-				break;
 			}
 		}
+
+		foreach ($items as $city_id=>$weather)
+		{
+			list($status, $text, $weatherStatus) = $this->codeRepl($weather['yc'],$weather['cb']);
+
+			if($city_id == $this->cityId)
+			{
+				$result['name'] = $weather['name'];
+				$result['temperature'] = (string)round($weather['tf']);
+				$result['condition'] = $this->weatherStatusToEssentialStatus($text, $status);
+			} else {
+				$result['other'][$city_id]['name'] = $weather['name'];
+				$result['other'][$city_id]['temperature'] = (string)round($weather['tf']);
+				$result['other'][$city_id]['condition'] = $this->weatherStatusToEssentialStatus($text, $status);
+			}
+		}
+
 		$this->setData($result);
 		
 		if (!sizeof($result))
