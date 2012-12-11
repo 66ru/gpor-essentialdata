@@ -103,17 +103,21 @@ class EssentialHmnDriver extends EssentialDataDriverBase {
 					'pressure' => $feedItem['pn'],
 					'wind' => $feedItem['nws'],
 					'cloudiness' => $c,
-						'precipitation' => $p,
-						'windDirection' => $wind_direct,
+                    'precipitation' => $p,
+                    'windDirection' => $wind_direct,
 				);
 				if($this->cityId == $city_id)
-					$result[$currDate] = array('day' => $cityItemDay, 'night' => $cityItemNight, 'name'=>$feedItem['t']);
+                {
+					$result[$currDate]['day'] = $cityItemDay;
+                    $result[$currDate]['night'] = $cityItemNight;
+                    $result[$currDate]['name'] = $feedItem['t'];
+                }
 				else
 					$result[$currDate]['other'][$city_id] = array('day' => $cityItemDay, 'night' => $cityItemNight, 'name'=>$feedItem['t']);
 			}
 		}
-		
-		
+
+
 		/**
 		 * 
 		 * Тут берется погод полная на 4 дня текущих
@@ -125,18 +129,18 @@ class EssentialHmnDriver extends EssentialDataDriverBase {
 			$this->prefix.'/2day_d_forecast.xml',
 			$this->prefix.'/3day_d_forecast.xml',
 		);
-		
+
 		for ($if=0; $if<sizeof($files_3); $if++)
 		{
 			$file1 = $this->url1.$files_3[$if];
-			$file2 = $this->url2.$files_3[$if];	
-		
+			$file2 = $this->url2.$files_3[$if];
+
 			$xmldata = '';
 			if (!$xmldata = $this->component->loadUrl ($file1, false))
 			{
 				$xmldata = $this->component->loadUrl ($file2, false);
 			}
-			
+
 			if (!$xmldata)
 			{
 				Yii::app()->essentialData->report(get_class($this).': url '.$file1.' return empty result');
@@ -144,11 +148,11 @@ class EssentialHmnDriver extends EssentialDataDriverBase {
 			}
 			$array = $this->xmlUnserialize($xmldata);
 			$array = $array['forecast'];
-			
-			
+
+
 			$currDate = date('Y-m-d', strtotime(implode('-',array_values($array['f_provider']['forecast_to_date']['@attributes']))));
-			
-			
+
+
 			$feedItems = false;
 			$tmp = $array['c'];
 			for ($i=0; $i<sizeof($tmp); $i++)
@@ -157,15 +161,15 @@ class EssentialHmnDriver extends EssentialDataDriverBase {
 
 				$city_id = $tmp[$i]['@attributes']['id'];
 				$feedItem = $tmp[$i];
-			
+
 				$new = array();
 				$tmp_ft = $feedItem['ft'];
-				for ($i2=0; $i2<sizeof($tmp_ft); $i2++)		
+				for ($i2=0; $i2<sizeof($tmp_ft); $i2++)
 				{
-					$t = $tmp_ft[$i2]['@attributes']['t']; 
+					$t = $tmp_ft[$i2]['@attributes']['t'];
 					$new[$t]= $tmp_ft[$i2];
 				}
-					
+
 				$feedItem['ft'] = $new;
 				$feedItems[$city_id]=$feedItem;
 			}
@@ -210,7 +214,7 @@ class EssentialHmnDriver extends EssentialDataDriverBase {
 		}
 
 		$this->setData($result);
-		
+
 		if (!sizeof($result))
 			Yii::app()->essentialData->report(get_class($this).': data empty');
 		
