@@ -24,7 +24,7 @@ class EssentialHmnDriver extends EssentialDataDriverBase {
 		if (!$this->url1 && !$this->url2)
 			throw new EssentialDataException(Yii::t('essentialdata', get_class($this).': url1 and/or url2 attributes required', array()), 500);
 
-		$feedItem = false;
+		$feedItems = false;
 		$result = array();
 		
 		$files_days = array(
@@ -44,7 +44,7 @@ class EssentialHmnDriver extends EssentialDataDriverBase {
 		for ($if=0; $if<sizeof($files_days); $if++)
 		{
 			$file1 = $this->url1.$files_days[$if];
-			$file2 = $this->url2.$files_days[$if];	
+			$file2 = $this->url2.$files_days[$if];
 
 			$xmldata = '';
 			if (!$xmldata = $this->component->loadUrl ($file1, false))
@@ -61,71 +61,63 @@ class EssentialHmnDriver extends EssentialDataDriverBase {
 			$array = $array['forecast'];
 			
 			$currDate = date('Y-m-d', strtotime(implode('-',array_values($array['f_provider']['forecast_to_date']['@attributes']))));
-			$celements = array();
 			$tmp = $array['c'];
 			for ($i=0; $i<sizeof($tmp); $i++)
 			{
-				$city_id = $tmp[$i]['@attributes']['id']; 
-				if ($this->cityId != $city_id)
-					continue;
-				$feedItem = $tmp[$i];
-				break;
-			}		
+				$city_id = $tmp[$i]['@attributes']['id'];
 
-			if (!$feedItem)
+				$feedItems[$city_id] = $tmp[$i];
+			}
+
+			if (!$feedItems)
 				throw new EssentialDataException(Yii::t('essentialdata', get_class($this).': cityId '.$this->cityId.' not found in source', array()), 500);
 			
-			
-			$itemtime = $feedItem;
+			foreach($feedItems as $city_id=>$feedItem)
+			{
 
-			$citiesNames[$city_id] = $itemtime['t']; 
-				
-			// День
-			$t = 12;
-			$dtime = $currDate.' '.((int)$t<10 ? '0'.$t : $t).':00:00';
-			$time = strtotime($dtime);
-			$weekday = date('w',$time)+1;
-			
-			$c = $this->getCloudiness($itemtime['dw']);
-		 	$p = $this->getPrecipitation($itemtime['dw']);		
-		 	
-		 	$wind_direct = $this->windDirect($itemtime['dwd']);
-				
-			$cityItemDay = array(
-				'temperature' => (string)round($itemtime['td']),
-				'relwet' => isset($itemtime['hum_d'])?$itemtime['hum_d']:0,
-				'pressure' => $itemtime['pd'],
-				'wind' => $itemtime['dws'],
-				'cloudiness' => $c,
-				'precipitation' => $p,
-				'windDirection' => $wind_direct,
-			);
-			 	
-					
-			// Ночь
-			$t = 0;
-			$dtime = $currDate.' '.((int)$t<10 ? '0'.$t : $t).':00:00';
-			$time = strtotime($dtime);
-			$weekday = date('w',$time)+1;
-			
-			$c = $this->getCloudiness($itemtime['nw']);
-		 	$p = $this->getPrecipitation($itemtime['nw']);	
-		 	
-		 	$wind_direct = $this->windDirect($itemtime['nwd']);	
+				// День
+				$c = $this->getCloudiness($feedItem['dw']);
+				$p = $this->getPrecipitation($feedItem['dw']);
 
-			$cityItemNight = array(
-				'temperature' => (string)round($itemtime['tn']),
-				'relwet' => $itemtime['hum_n'],
-				'pressure' => $itemtime['pn'],
-				'wind' => $itemtime['nws'],
-				'cloudiness' => $c,
+				$wind_direct = $this->windDirect($feedItem['dwd']);
+
+				$cityItemDay = array(
+					'temperature' => (string)round($feedItem['td']),
+					'relwet' => isset($feedItem['hum_d'])?$feedItem['hum_d']:0,
+					'pressure' => $feedItem['pd'],
+					'wind' => $feedItem['dws'],
+					'cloudiness' => $c,
 					'precipitation' => $p,
 					'windDirection' => $wind_direct,
-			);
-			$result[$currDate] = array('day' => $cityItemDay, 'night' => $cityItemNight);
+				);
+
+				// Ночь
+				$c = $this->getCloudiness($feedItem['nw']);
+				$p = $this->getPrecipitation($feedItem['nw']);
+
+				$wind_direct = $this->windDirect($feedItem['nwd']);
+
+				$cityItemNight = array(
+					'temperature' => (string)round($feedItem['tn']),
+					'relwet' => $feedItem['hum_n'],
+					'pressure' => $feedItem['pn'],
+					'wind' => $feedItem['nws'],
+					'cloudiness' => $c,
+                    'precipitation' => $p,
+                    'windDirection' => $wind_direct,
+				);
+				if($this->cityId == $city_id)
+                {
+					$result[$currDate]['day'] = $cityItemDay;
+                    $result[$currDate]['night'] = $cityItemNight;
+                    $result[$currDate]['name'] = $feedItem['t'];
+                }
+				else
+					$result[$currDate]['other'][$city_id] = array('day' => $cityItemDay, 'night' => $cityItemNight, 'name'=>$feedItem['t']);
+			}
 		}
-		
-		
+
+
 		/**
 		 * 
 		 * Тут берется погод полная на 4 дня текущих
@@ -137,18 +129,18 @@ class EssentialHmnDriver extends EssentialDataDriverBase {
 			$this->prefix.'/2day_d_forecast.xml',
 			$this->prefix.'/3day_d_forecast.xml',
 		);
-		
+
 		for ($if=0; $if<sizeof($files_3); $if++)
 		{
 			$file1 = $this->url1.$files_3[$if];
-			$file2 = $this->url2.$files_3[$if];	
-		
+			$file2 = $this->url2.$files_3[$if];
+
 			$xmldata = '';
 			if (!$xmldata = $this->component->loadUrl ($file1, false))
 			{
 				$xmldata = $this->component->loadUrl ($file2, false);
 			}
-			
+
 			if (!$xmldata)
 			{
 				Yii::app()->essentialData->report(get_class($this).': url '.$file1.' return empty result');
@@ -156,62 +148,73 @@ class EssentialHmnDriver extends EssentialDataDriverBase {
 			}
 			$array = $this->xmlUnserialize($xmldata);
 			$array = $array['forecast'];
-			
-			
+
+
 			$currDate = date('Y-m-d', strtotime(implode('-',array_values($array['f_provider']['forecast_to_date']['@attributes']))));
-			
-			
-			$feedItem = false;
+
+
+			$feedItems = false;
 			$tmp = $array['c'];
 			for ($i=0; $i<sizeof($tmp); $i++)
 			{
+				$feedItem = false;
+
 				$city_id = $tmp[$i]['@attributes']['id'];
-				if ($this->cityId != $city_id)
-					continue;
 				$feedItem = $tmp[$i];
-			
+
 				$new = array();
-				$tmp_ft = $feedItem['ft'];		
-				for ($i2=0; $i2<sizeof($tmp_ft); $i2++)		
+				$tmp_ft = $feedItem['ft'];
+				for ($i2=0; $i2<sizeof($tmp_ft); $i2++)
 				{
-					$t = $tmp_ft[$i2]['@attributes']['t']; 
+					$t = $tmp_ft[$i2]['@attributes']['t'];
 					$new[$t]= $tmp_ft[$i2];
 				}
-					
+
 				$feedItem['ft'] = $new;
-				break;
+				$feedItems[$city_id]=$feedItem;
 			}
 
-			if (!$feedItem)
+			if (!$feedItems)
 				throw new EssentialDataException(Yii::t('essentialdata', get_class($this).': cityId '.$this->cityId.' not found in source', array()), 500);
-			
-			foreach($feedItem['ft'] as $t => $itemtime)
+
+			foreach($feedItems as $city_id=>$feedItem)
 			{
-				$t = $t==24 ? 0 : $t;
-				$dtime = $currDate.' '.((int)$t<10 ? '0'.$t : $t).':00:00';
-				$time = strtotime($dtime);
-				$weekday = date('w',$time)+1;
-				$wind_direct = $this->windDirect($itemtime['wd']);
-				
-				$c = $this->getCloudiness($itemtime['w']);
-			 	$p = $this->getPrecipitation($itemtime['w']);
-				 	
-				$cityItem = array(
-					'temperature' => (string)round($itemtime['tf']),
-					'relwet' => $itemtime['hum'],
-					'pressure' => $itemtime['p'],
-					'wind' => $itemtime['ws'],
-					'cloudiness' => $c,
-					'precipitation' => $p,
-					'windDirection' => $wind_direct,
-				);
-			 	
-				$result[$currDate][self::hourToDayPeriod($t)] = $cityItem;
+				foreach($feedItem['ft'] as $t => $itemtime)
+				{
+					$t = $t==24 ? 0 : $t;
+					$dtime = $currDate.' '.((int)$t<10 ? '0'.$t : $t).':00:00';
+					$time = strtotime($dtime);
+					$weekday = date('w',$time)+1;
+					$wind_direct = $this->windDirect($itemtime['wd']);
+
+					$c = $this->getCloudiness($itemtime['w']);
+					$p = $this->getPrecipitation($itemtime['w']);
+
+					$cityItem = array(
+						'temperature' => (string)round($itemtime['tf']),
+						'relwet' => $itemtime['hum'],
+						'pressure' => $itemtime['p'],
+						'wind' => $itemtime['ws'],
+						'cloudiness' => $c,
+						'precipitation' => $p,
+						'windDirection' => $wind_direct,
+					);
+					if($this->cityId==$city_id)
+					{
+						$result[$currDate][self::hourToDayPeriod($t)] = $cityItem;
+						$result[$currDate]['name'] = $feedItem['t'];
+					}
+					else
+					{
+						$result[$currDate]['other'][$city_id]['name'] = $feedItem['t'];
+						$result[$currDate]['other'][$city_id][self::hourToDayPeriod($t)] = $cityItem;
+					}
+				}
 			}
 		}
-		
+
 		$this->setData($result);
-		
+
 		if (!sizeof($result))
 			Yii::app()->essentialData->report(get_class($this).': data empty');
 		
