@@ -51,7 +51,8 @@ abstract class EssentialDataDriverBase extends CComponent implements IEssentialD
 	public function init($component, $options = array()) {
 		if (isset($component))
 			$this->setComponent($component);
-	
+
+
 		foreach ($options as $key => $val)
 			$this->$key = $val;
 	}
