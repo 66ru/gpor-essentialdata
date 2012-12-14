@@ -17,6 +17,8 @@ return array(
 
 	'essentialDataFilePath' => '', // Путь до файлов с фидами
 
+	'autoUrl' => '', //для сбора марок и моделей авто (http://66.ru/xml_auto.php)
+
 	'hmnUrl' => '', // для провайдера hmn сервиса weather
 	'hmnUrl2' => '', // резерв для провайдера hmn сервиса weather
 

@@ -181,7 +181,17 @@ return array (
                             'pass' => 'k07pqHh0lJ',
                         ),
 					)
-				)
+				),
+				'auto' => array(
+					'class' => 'EssentialAutoService',
+					'period' => '1 * * * *',
+					'drivers' => array(
+						'66' => array(
+							'class' => 'EssentialAutoDriver',
+							'url' => $params['autoUrl'],
+						),
+					)
+				),
 			),
 		);
 ?>
