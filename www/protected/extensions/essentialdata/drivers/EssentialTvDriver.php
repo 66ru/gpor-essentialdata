@@ -64,6 +64,15 @@ class EssentialTvDriver extends EssentialDataDriverBase
 		foreach ($channelsXml->File as $channelXml)
 		{
 			$channelId = (string)$channelXml->ChannelSymbId;
+			$channelPrgId = false;
+
+			$tmp = $channelXml->Name;
+			if (preg_match('#.*prg=(\d+).*#', $tmp, $matches)) {
+				$channelPrgId = (int)$matches[1];
+			}
+
+			if (!isset($tvMap[$channelId]))
+				$tvMap[$channelId] = array();
 			$tvMap[$channelId]['name'] = (string)$channelXml->ChannelName;
 			$tvMap[$channelId]['events'] = array();
 
@@ -81,8 +90,8 @@ class EssentialTvDriver extends EssentialDataDriverBase
 
 			// Добавляем временную зону
 			$timeZone = 0;
-			if (isset($channelsArr[$channelId]))
-				$timeZone = (int)$channelsArr[$channelId]['timeZone'];
+			if (isset($channelsArr[$channelPrgId]))
+				$timeZone = (int)$channelsArr[$channelPrgId]['timeZone'];
 			$query[] = 'sh='.(string)$timeZone;
 
 			$query = implode('&',$query);
@@ -186,9 +195,10 @@ class EssentialTvDriver extends EssentialDataDriverBase
 			{
 				$channelId = $matches[1];
 				$channelTimeZone = $matches[2];
-				$arr[(string)$channelNameId] = array(
+				$arr[(int)$channelId] = array(
 					'prgId' => (int)$channelId,
 					'timeZone' => $channelTimeZone,
+					'nameId' => (string)$channelNameId,
 				);
 			}
 		}
