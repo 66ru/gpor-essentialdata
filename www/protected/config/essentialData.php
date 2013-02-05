@@ -165,21 +165,24 @@ return array (
 					'class' => 'EssentialTvService',
 					'period' => '1 * * * *',
 					'drivers' => array(
+                        'gorodche' => array(
+                            'class' => 'EssentialTvDriver',
+                            'login' => 'tv6480',
+                            'pass' => 'k07pqHh0lJ',
+                            'GMT' => 4,
+                        ),
 						'ekb' => array(
 							'class' => 'EssentialTvDriver',
 							'login' => 'tv6035',
 							'pass' => 'YdFbBDsbB1',
+                            'GMT' => 6,
 						),
 						'almaty' => array(
 							'class' => 'EssentialTvDriver',
 							'login' => 'tv6403',
 							'pass' => 'AZAZympvjt',
+                            'GMT' => 6,
 						),
-                        'gorodche' => array(
-                            'class' => 'EssentialTvDriver',
-                            'login' => 'tv6480',
-                            'pass' => 'k07pqHh0lJ',
-                        ),
 					)
 				),
 				'auto' => array(

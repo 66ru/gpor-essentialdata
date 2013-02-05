@@ -10,9 +10,12 @@ class EssentialTvDriver extends EssentialDataDriverBase
 	/** @var resource Curl instance */
 	private $c;
 
+	protected $MainGMT = 6; // GMT, от которого считаются timestamp'ы (Екатеринбург)
+
 	protected $host = "xmltv.s-tv.ru";
 	protected $login = "";  	
 	protected $pass = "";
+	protected $GMT = 0; // GMT клиента
 	protected $show = "2"; //Отобразить в формате 1-HTML, 2-XML.
 	protected $xmlTV = "8"; //Форматы программ (text, xmltv, xml, xml1,xml2, xls, text2, xmlfull), 1000-Ваш индивидуальный формат (если заказывали).
 
@@ -114,8 +117,8 @@ class EssentialTvDriver extends EssentialDataDriverBase
 				}
 
 				$event['id']			= (string)$eventXml->ID;
-				$event['start']			= strtotime((string)$eventXml->Start);
-				$event['finish']		= strtotime((string)$eventXml->Finish);
+				$event['start']			= strtotime((string)$eventXml->Start) + (($this->MainGMT - $this->GMT)*60*60);
+				$event['finish']		= strtotime((string)$eventXml->Finish) + (($this->MainGMT - $this->GMT)*60*60);
 				$event['title']			= (string)$eventXml->Gate->Title . $pg;
 				$event['subtitle']		= (string)$eventXml->Gate->SubTitle;
 				$event['typeId']		= (string)$eventXml->Flag->ID;
@@ -125,11 +128,13 @@ class EssentialTvDriver extends EssentialDataDriverBase
 				$event['genre']			= (string)$eventXml->Gate->Genre;
 				$event['year']			= (string)$eventXml->Gate->Year;
 				$event['images']		= array();
+
 				if (!empty($eventXml->Gallery))
 				{
 					foreach($eventXml->Gallery->Image as $image)
 						$event['images'][] = (string)$image;
 				}
+
 				$event['directors'] = array();
 				$event['actors'] = array();
 				if (!empty($eventXml->Gate->Humans))
@@ -149,7 +154,7 @@ class EssentialTvDriver extends EssentialDataDriverBase
 						unset($event[$id]);
 				}
 
-				$eventDay = date('Y-m-d', strtotime((string)$eventXml->Start) - $this->dayShift);
+				$eventDay = date('Y-m-d', (strtotime((string)$eventXml->Start) + (($this->MainGMT - $this->GMT)*60*60)) - $this->dayShift);
 				$tvMap[$channelId]['events'][$eventDay][] = $event;
 				if (empty($tvMap[$channelId]['logo']))
 					$tvMap[$channelId]['logo'] = (string)$eventXml->Channel->Logo;
