@@ -183,6 +183,12 @@ return array (
 							'pass' => 'AZAZympvjt',
                             'GMT' => 6,
 						),
+                        'omsk' => array(
+                            'class' => 'EssentialTvDriver',
+                            'login' => 'tv6653',
+                            'pass' => 'IKjVewvZvl',
+                            'GMT' => 7,
+                        ),
 					)
 				),
 				'auto' => array(
