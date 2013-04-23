@@ -190,8 +190,23 @@ class EssentialHmnDriver extends EssentialDataDriverBase {
 					$c = $this->getCloudiness($itemtime['w']);
 					$p = $this->getPrecipitation($itemtime['w']);
 
+                    if(in_array(self::hourToDayPeriod($t),array('morning','day','evening'))) {
+
+                        if(round($itemtime['tf'])>round($itemtime['tt']))
+                            $temp = (string)round($itemtime['tf']);
+                        else
+                            $temp = (string)round($itemtime['tt']);
+                    }
+                    else
+                        if(round($itemtime['tf'])>round($itemtime['tt']))
+                            $temp = (string)round($itemtime['tt']);
+                        else
+                            $temp = (string)round($itemtime['tf']);
+
+
+
 					$cityItem = array(
-						'temperature' => (string)round($itemtime['tf']),
+						'temperature' => $temp,
 						'relwet' => $itemtime['hum'],
 						'pressure' => $itemtime['p'],
 						'wind' => $itemtime['ws'],
