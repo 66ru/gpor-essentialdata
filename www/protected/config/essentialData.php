@@ -167,6 +167,14 @@ return array (
                             'prefix' => 'gorodche_ru',
                             'cityId' => 27113,
                         ),
+                        'engeqls' => array(
+                                'class' => 'EssentialHmnDriver',
+                                'title' => 'Текущая погода в Энгельсе',
+                                'url1' => $params['hmnUrl'],
+                                'url2' => $params['hmnUrl2'],
+                                'prefix' => 'los-engels_ru',
+                                'cityId' => 34778,
+                        )
 					),
 				),
 				'tv' => array(
