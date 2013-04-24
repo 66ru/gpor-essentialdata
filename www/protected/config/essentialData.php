@@ -168,12 +168,12 @@ return array (
                             'cityId' => 27113,
                         ),
                         'engels' => array(
-                                'class' => 'EssentialHmnDriver',
-                                'title' => 'Текущая погода в Энгельсе',
-                                'url1' => $params['hmnUrl'],
-                                'url2' => $params['hmnUrl2'],
-                                'prefix' => 'los-engels_ru',
-                                'cityId' => 34778,
+                            'class' => 'EssentialCurrentHmnDriver',
+                            'title' => 'Текущая погода в Энгельсе',
+                            'url1' => $params['hmnUrl'],
+                            'url2' => $params['hmnUrl2'],
+                            'prefix' => 'los-engels_ru',
+                            'cityId' => 34778,
                         )
 					),
 				),
