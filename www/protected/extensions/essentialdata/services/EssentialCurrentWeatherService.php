@@ -33,6 +33,8 @@ class EssentialCurrentWeatherService extends EssentialDataServiceBase {
 
     public function checkWeatherCondition($data)
     {
+        // todo: надо не падать, а слать сообщение, что найдено новое погодное условие
+        return true;
         if(is_array($data) && isset($data['condition']) && in_array($data['condition'], EssentialCurrentWeatherHelper::getWeatherConditions()))
             return true;
         else
