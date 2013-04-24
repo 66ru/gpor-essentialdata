@@ -112,7 +112,7 @@ return array (
                                 'url1' => $params['hmnUrl'],
                                 'url2' => $params['hmnUrl2'],
                                 'prefix' => 'los-engels_ru',
-                                'cityId' => 27113,
+                                'cityId' => 34778,
                         )
 					),
 				),
