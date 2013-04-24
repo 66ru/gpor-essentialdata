@@ -106,7 +106,7 @@ return array (
                                 'prefix' => 'gorodche_ru',
                                 'cityId' => 27113,
                         ),
-                        'engeqls' => array(
+                        'engels' => array(
                                 'class' => 'EssentialHmnDriver',
                                 'title' => 'Прогноз погоды в Энгельсе на 10 дней',
                                 'url1' => $params['hmnUrl'],
@@ -167,7 +167,7 @@ return array (
                             'prefix' => 'gorodche_ru',
                             'cityId' => 27113,
                         ),
-                        'engeqls' => array(
+                        'engels' => array(
                                 'class' => 'EssentialHmnDriver',
                                 'title' => 'Текущая погода в Энгельсе',
                                 'url1' => $params['hmnUrl'],
