@@ -62,7 +62,11 @@ class EssentialTvDriver extends EssentialDataDriverBase
 		$efirDate = date( "Y-m-d" ); // this value doesn't affect, reduntant?
 		$getParams = 'efirdate='.$efirDate.'&login='.$this->login.'&pass='.$this->pass;
 		$channels = $this->getTVUrl("http://$this->host/standart/list_channel.php?".$getParams);
-		$channelsXml = simplexml_load_string($channels);
+		$channelsXml = @simplexml_load_string($channels);
+
+		if (!$channelsXml) {
+			return true;
+		}
 
 		foreach ($channelsXml->File as $channelXml)
 		{
@@ -188,9 +192,10 @@ class EssentialTvDriver extends EssentialDataDriverBase
 	{
 		$getParams = 'login='.$this->login.'&pass='.$this->pass.'&show='.$this->show.'&xmltv='.$this->xmlTV;
 		$channels = $this->getTVUrl("http://$this->host/xchenel.php?".$getParams);
-		$channelsXml = simplexml_load_string($channels);
-		if (!$channelsXml)
+		$channelsXml = @simplexml_load_string($channels);
+		if (!$channelsXml) {
 			return array();
+		}
 
 		$arr = array();
 		foreach ($channelsXml as $channelEntry)
