@@ -217,6 +217,18 @@ return array (
 						),
 					)
 				),
+				'traffic' => array(
+					'class' => 'EssentialTrafficService',
+					'period' => '/5 * * * *',
+					'drivers' => array(
+						'ekb' => array(
+							'class' => 'EssentialYandexTrafficDriver',
+							'url' => 'http://api-maps.yandex.ru/services/traffic-info/1.0/?format=json&lang=ru-RU',
+							'cityName' => 'Екатеринбург',
+						),
+					)
+				),
+
 			),
 		);
 ?>
