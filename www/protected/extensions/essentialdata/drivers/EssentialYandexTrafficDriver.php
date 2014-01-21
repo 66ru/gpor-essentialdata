@@ -12,14 +12,36 @@ class EssentialYandexTrafficDriver extends EssentialDataDriverBase {
 	protected $cityName = '';
 
 	public function run() {	
+		$data = $this->component->loadUrl ($this->url, false);
+		$array = CJSON::decode($data);
 
-		$xmldata = $this->component->loadUrl ($this->url, false);
-		$array = $this->xmlUnserialize($xmldata);
+		$result = array();
 
-		var_dump($array);
+		if ($array && is_array($array)) {
+			if (isset($array['GeoObjectCollection']) && isset($array['GeoObjectCollection']['features']) && is_array($array['GeoObjectCollection']['features']) ) {
+				foreach ($array['GeoObjectCollection']['features'] as $item) {
+					if (isset($item['properties']) && is_array($item['properties']) && isset($item['properties']['name'])) {
+						if ($item['properties']['name'] == $this->cityName) {
 
-		$result = array(
-		);
+							$result['cityName'] = $item['properties']['name'];
+
+							if (isset($item['properties']) && isset($item['properties']['JamsMetaData']) && isset($item['properties']['JamsMetaData']['level']) ) {
+								$result['level'] = $item['properties']['JamsMetaData']['level'];
+							}
+							if (isset($item['properties']) && isset($item['properties']['JamsMetaData']) && isset($item['properties']['JamsMetaData']['timestamp']) ) {
+								$result['actualDate'] = $item['properties']['JamsMetaData']['timestamp'];
+							}
+							if (isset($item['properties']) && isset($item['properties']['JamsMetaData']) && isset($item['properties']['JamsMetaData']['icon']) ) {
+								$result['icon'] = $item['properties']['JamsMetaData']['icon'];
+							}
+
+							break;
+						}
+					}
+				}
+			}
+
+		}
 
 		$this->setData($result);
 		
