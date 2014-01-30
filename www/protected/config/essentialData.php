@@ -226,6 +226,21 @@ return array (
 							'url' => 'http://api-maps.yandex.ru/services/traffic-info/1.0/?format=json&lang=ru-RU',
 							'cityName' => 'Екатеринбург',
 						),
+						'perm' => array(
+							'class' => 'EssentialYandexTrafficDriver',
+							'url' => 'http://api-maps.yandex.ru/services/traffic-info/1.0/?format=json&lang=ru-RU',
+							'cityName' => 'Пермь',
+						),
+						'omsk' => array(
+							'class' => 'EssentialYandexTrafficDriver',
+							'url' => 'http://api-maps.yandex.ru/services/traffic-info/1.0/?format=json&lang=ru-RU',
+							'cityName' => 'Омск',
+						),
+						'cherepovec' => array(
+							'class' => 'EssentialYandexTrafficDriver',
+							'url' => 'http://api-maps.yandex.ru/services/traffic-info/1.0/?format=json&lang=ru-RU',
+							'cityName' => 'Череповец',
+						),
 					)
 				),
 
