@@ -86,7 +86,8 @@ $mainConfig = array(
 		),
 
         'errorHandler' => array(
-        	'class' => 'application.components.ExtendedErrorHandler'
+        	'class' => 'application.components.ExtendedErrorHandler',
+	        'ignoredErrorCodes' => array(404),
         ),
 		'localConfig' => array(
             'class' => 'application.components.LocalConfigComponent'

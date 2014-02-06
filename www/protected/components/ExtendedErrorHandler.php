@@ -16,6 +16,8 @@ class ExtendedErrorHandler extends CErrorHandler
 		403 => 'Доступ запрещен'
 	);
 
+	public $ignoredErrorCodes = array();
+
 	/**
 	 * Renders the view.
 	 * @param string the view name (file name without extension).
@@ -103,7 +105,8 @@ class ExtendedErrorHandler extends CErrorHandler
 	{
 		parent::handleException($exception);
 
-		$this->reportException($exception);
+		if(!in_array($exception->statusCode,$this->ignoredErrorCodes))
+			$this->reportException($exception);
 	}
 
 	protected function handleError($event)
