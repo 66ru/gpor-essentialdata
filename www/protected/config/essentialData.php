@@ -14,6 +14,17 @@ return array (
 						),
 					),
 				),
+                'bankcurrency' => array(
+                    'class' => 'EssentialBankCurrencyService',
+                    'period' => '/30 * * * *',
+                    'drivers' => array(
+                        'bankinform' => array(
+                            'class' => 'EssentialBankinformDriver',
+                            'title' => 'Курсы валют банков с сайта http://bankinform.ru',
+                            'url' => 'http://bankinform.ru/services/rates/xml.aspx'
+                        )
+                    )
+                ),
 				'bankindexes' => array (
 					'class' => 'EssentialBankIndexesService',
         			'period' => '/30 * * * *',
