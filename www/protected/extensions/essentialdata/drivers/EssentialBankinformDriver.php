@@ -30,7 +30,7 @@ class EssentialBankinformDriver extends EssentialDataDriverBase {
                 $result['data'][] = array(
                     'bankName' => (string)$item->name,
                     'buy'=>array('USD'=>str_replace(',', '.', (string)$item->usd->buy), 'EUR'=>str_replace(',', '.', (string)$item->eur->buy)),
-                    'sell'=>array('USD'=>str_replace(',', '.', (string)$item->usd->buy), 'EUR'=>str_replace(',', '.', (string)$item->eur->sale)),
+                    'sale'=>array('USD'=>str_replace(',', '.', (string)$item->usd->sale), 'EUR'=>str_replace(',', '.', (string)$item->eur->sale)),
                 );
             }  
         }
