@@ -13,36 +13,28 @@ class EssentialYandexTrafficDriver extends EssentialDataDriverBase {
 
 	public function run() {	
 		$data = $this->component->loadUrl ($this->url, false);
-		$array = CJSON::decode($data);
+		$array = false;
+		if ($data)
+			$array = XML2Array::createArray($data);
 
 		$result = array();
 
 		if ($array && is_array($array)) {
-			if (isset($array['GeoObjectCollection']) && isset($array['GeoObjectCollection']['features']) && is_array($array['GeoObjectCollection']['features']) ) {
-				foreach ($array['GeoObjectCollection']['features'] as $item) {
-					if (isset($item['properties']) && is_array($item['properties']) && isset($item['properties']['name'])) {
-						if ($item['properties']['name'] == $this->cityName) {
+			if (isset($array['info']['traffic']) && isset($array['info']['traffic']['level']) ) {
+				$result['cityName'] = $array['info']['region']['title'];
 
-							$result['cityName'] = $item['properties']['name'];
-
-							if (isset($item['properties']) && isset($item['properties']['JamsMetaData']) && isset($item['properties']['JamsMetaData']['level']) ) {
-								$result['level'] = $item['properties']['JamsMetaData']['level'];
-							}
-							if (isset($item['properties']) && isset($item['properties']['JamsMetaData']) && isset($item['properties']['JamsMetaData']['timestamp']) ) {
-								$result['actualDate'] = $item['properties']['JamsMetaData']['timestamp'];
-							}
-							if (isset($item['properties']) && isset($item['properties']['JamsMetaData']) && isset($item['properties']['JamsMetaData']['icon']) ) {
-								$result['icon'] = $item['properties']['JamsMetaData']['icon'];
-							}
-
-							break;
-						}
-					}
+				if ( isset($array['info']['traffic']['level']) ) {
+					$result['level'] = $array['info']['traffic']['level'];
+				}
+				if ( isset($array['info']['traffic']['icon']) ) {
+					$result['icon'] = $array['info']['traffic']['icon'];
+				}
+				if ( isset($array['info']['traffic']['time']) ) {
+					$result['actualDate'] =  strtotime( date('Y-m-d') . ' ' . $array['info']['traffic']['time'].':00' );
 				}
 			}
 
 		}
-
 		$this->setData($result);
 		
 		return true;

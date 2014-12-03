@@ -192,18 +192,13 @@ return array (
 					'class' => 'EssentialTvService',
 					'period' => '1 * * * *',
 					'drivers' => array(
-                        'gorodche' => array(
-                            'class' => 'EssentialTvDriver',
-                            'login' => 'tv6480',
-                            'pass' => 'k07pqHh0lJ',
-                            'GMT' => 4,
-                        ),
 						'ekb' => array(
 							'class' => 'EssentialTvDriver',
 							'login' => 'tv6035',
 							'pass' => 'YdFbBDsbB1',
                             'GMT' => 6,
 						),
+						/*
 						'almaty' => array(
 							'class' => 'EssentialTvDriver',
 							'login' => 'tv6403',
@@ -216,6 +211,13 @@ return array (
                             'pass' => 'IKjVewvZvl',
                             'GMT' => 7,
                         ),
+                        'gorodche' => array(
+                            'class' => 'EssentialTvDriver',
+                            'login' => 'tv6480',
+                            'pass' => 'k07pqHh0lJ',
+                            'GMT' => 4,
+                        ),
+                        */
 					)
 				),
 				'auto' => array(
@@ -234,9 +236,11 @@ return array (
 					'drivers' => array(
 						'ekb' => array(
 							'class' => 'EssentialYandexTrafficDriver',
-							'url' => 'http://api-maps.yandex.ru/services/traffic-info/1.0/?format=json&lang=ru-RU',
+//							'url' => 'http://api-maps.yandex.ru/services/traffic-info/1.0/?format=json&lang=ru-RU',
+							'url' => 'http://export.yandex.ru/bar/reginfo.xml?region=54',
 							'cityName' => 'Екатеринбург',
 						),
+						/*
 						'perm' => array(
 							'class' => 'EssentialYandexTrafficDriver',
 							'url' => 'http://api-maps.yandex.ru/services/traffic-info/1.0/?format=json&lang=ru-RU',
@@ -252,6 +256,7 @@ return array (
 							'url' => 'http://api-maps.yandex.ru/services/traffic-info/1.0/?format=json&lang=ru-RU',
 							'cityName' => 'Череповец',
 						),
+						*/
 					)
 				),
 
