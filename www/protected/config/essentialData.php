@@ -16,7 +16,7 @@ return array (
 				),
                 'bankcurrency' => array(
                     'class' => 'EssentialBankCurrencyService',
-                    'period' => '/30 * * * *',
+                    'period' => '/5 * * * *',
                     'drivers' => array(
                         'bankinform' => array(
                             'class' => 'EssentialBankinformDriver',
