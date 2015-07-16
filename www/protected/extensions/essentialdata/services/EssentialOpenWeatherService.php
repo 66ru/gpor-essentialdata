@@ -1,13 +1,11 @@
 <?php
 /**
- * EssentialWeatherService class file.
- *
- * @author Stepanoff Alex <stenlex@gmail.com>
+ * Получение погоды с OpenWeatherMap
  */
 
 require_once dirname(dirname(__FILE__)).'/EssentialDataServiceBase.php';
 
-class EssentialWeatherService extends EssentialDataServiceBase
+class EssentialOpenWeatherService extends EssentialDataServiceBase
 {
     protected $name = 'weather';
     protected $title = 'Прогноз погоды';

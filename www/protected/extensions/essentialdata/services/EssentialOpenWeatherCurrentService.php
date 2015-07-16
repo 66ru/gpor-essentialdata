@@ -1,14 +1,12 @@
 <?php
 /**
- * EssentialCurrentWeatherService class file.
- *
- * @author Stepanoff Alex <stenlex@gmail.com>
+ * Получение текущей погоды с OpenWeatherMap
  */
 
 require_once dirname(dirname(__FILE__)).'/EssentialDataServiceBase.php';
 require_once dirname(dirname(__FILE__)).'/helpers/EssentialCurrentWeatherHelper.php';
 
-class EssentialCurrentWeatherService extends EssentialDataServiceBase
+class EssentialOpenWeatherCurrentService extends EssentialDataServiceBase
 {
     protected $name = 'currentweather';
     protected $title = 'Текущая погода';
