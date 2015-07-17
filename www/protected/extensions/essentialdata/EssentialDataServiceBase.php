@@ -14,46 +14,46 @@ require_once 'IEssentialDataService.php';
 abstract class EssentialDataServiceBase extends CComponent implements IEssentialDataService
 {
     /**
-	 * @var string cron period.
-	 */
+     * @var string cron period.
+     */
     protected $period;
 
     /**
-	 * @var string the service name.
-	 */
+     * @var string the service name.
+     */
     protected $name;
 
     /**
-	 *
-	 * @var string the service title to display in views.
-	 */
+     *
+     * @var string the service title to display in views.
+     */
     protected $title;
 
     /**
-	 *
-	 * @var string drivers that recieved and obtain data from eternal sources.
-	 */
+     *
+     * @var string drivers that recieved and obtain data from eternal sources.
+     */
     protected $drivers;
 
     /**
-	 * @var array attributes.
-	 * @see getAttribute
-	 * @see getItem
-	 */
+     * @var array attributes.
+     * @see getAttribute
+     * @see getItem
+     */
     protected $attributes = array();
 
     /**
-	 * @var EssentialDataProvider the {@link EssentialDataProvider} application component.
-	 */
+     * @var EssentialDataProvider the {@link EssentialDataProvider} application component.
+     */
     private $component;
 
     /**
-	 * PHP getter magic method.
-	 * This method is overridden so that service attributes can be accessed like properties.
-	 * @param string $name property name.
-	 * @return mixed property value.
-	 * @see getAttribute
-	 */
+     * PHP getter magic method.
+     * This method is overridden so that service attributes can be accessed like properties.
+     * @param string $name property name.
+     * @return mixed property value.
+     * @see getAttribute
+     */
     public function __get($name)
     {
         if ($this->hasAttribute($name))
@@ -63,12 +63,12 @@ abstract class EssentialDataServiceBase extends CComponent implements IEssential
     }
 
     /**
-	 * Checks if a attribute value is null.
-	 * This method overrides the parent implementation by checking
-	 * if the attribute is null or not.
-	 * @param string $name the attribute name.
-	 * @return boolean whether the attribute value is null.
-	 */
+     * Checks if a attribute value is null.
+     * This method overrides the parent implementation by checking
+     * if the attribute is null or not.
+     * @param string $name the attribute name.
+     * @return boolean whether the attribute value is null.
+     */
     public function __isset($name)
     {
         if ($this->hasAttribute($name))
@@ -78,10 +78,10 @@ abstract class EssentialDataServiceBase extends CComponent implements IEssential
     }
 
     /**
-	 * Initialize the component.
-	 * @param EssentialDataProvider $component the component instance.
-	 * @param array $options properties initialization.
-	 */
+     * Initialize the component.
+     * @param EssentialDataProvider $component the component instance.
+     * @param array $options properties initialization.
+     */
     public function init($component, $options = array())
     {
         if (isset($component))
@@ -92,53 +92,53 @@ abstract class EssentialDataServiceBase extends CComponent implements IEssential
     }
 
     /**
-	 * Returns period.
-	 */
+     * Returns period.
+     */
     public function getServicePeriod()
     {
         return $this->period;
     }
 
     /**
-	 * Returns service name(id).
-	 * @return string the service name(id).
-	 */
+     * Returns service name(id).
+     * @return string the service name(id).
+     */
     public function getServiceName()
     {
         return $this->name;
     }
 
     /**
-	 * Returns service title.
-	 * @return string the service title.
-	 */
+     * Returns service title.
+     * @return string the service title.
+     */
     public function getServiceTitle()
     {
         return $this->title;
     }
 
     /**
-	 * Sets {@link EssentialDataProvider} application component
-	 * @param EssentialDataProvider $component the application component.
-	 */
+     * Sets {@link EssentialDataProvider} application component
+     * @param EssentialDataProvider $component the application component.
+     */
     public function setComponent($component)
     {
         $this->component = $component;
     }
 
     /**
-	 * Returns the {@link EssentialDataProvider} application component.
-	 * @return EAuth the {@link EssentialDataProvider} application component.
-	 */
+     * Returns the {@link EssentialDataProvider} application component.
+     * @return EAuth the {@link EssentialDataProvider} application component.
+     */
     public function getComponent()
     {
         return $this->component;
     }
 
     /**
-	 * Returns declared drivers settings
-	 * @return array drivers settings.
-	 */
+     * Returns declared drivers settings
+     * @return array drivers settings.
+     */
     public function getDrivers()
     {
         $drivers = array();
@@ -153,10 +153,10 @@ abstract class EssentialDataServiceBase extends CComponent implements IEssential
     }
 
     /**
-	 * Returns the driver class.
-	 * @param string $driver the driver name.
-	 * @return IEssentialDataDriver the identity class.
-	 */
+     * Returns the driver class.
+     * @param string $driver the driver name.
+     * @return IEssentialDataDriver the identity class.
+     */
     public function getDriverClass($driver)
     {
         $driver = strtolower($driver);
@@ -178,20 +178,20 @@ abstract class EssentialDataServiceBase extends CComponent implements IEssential
     }
 
     /**
-	 * driver data validation
-	 * @param array $data data recived from driver
-	 * @return boolean whether validation successfuly passed.
-	 */
+     * driver data validation
+     * @param array $data data recived from driver
+     * @return boolean whether validation successfuly passed.
+     */
     public function checkDriverData($data)
     {
         return true;
     }
 
     /**
-	 * driver data validation
-	 * @param string $driver driver name
-	 * @return file path where data stored
-	 */
+     * driver data validation
+     * @param string $driver driver name
+     * @return file path where data stored
+     */
     public function getDriverPath($driver)
     {
         if (!isset($this->drivers[$driver]))
@@ -201,11 +201,11 @@ abstract class EssentialDataServiceBase extends CComponent implements IEssential
     }
 
     /**
-	 * save driver data
-	 * @param string $path file path where data will be save
-	 * @param array $data data recived from driver
-	 * @return boolean whether data was successfuly saved.
-	 */
+     * save driver data
+     * @param string $path file path where data will be save
+     * @param array $data data recived from driver
+     * @return boolean whether data was successfuly saved.
+     */
     public function saveData($path, $data)
     {
         $pathinfo = pathinfo($path);
@@ -242,19 +242,19 @@ abstract class EssentialDataServiceBase extends CComponent implements IEssential
     }
 
     /**
-	 * read driver data from file
-	 * @param string $driver driver name
-	 * @return array saved driver data
-	 */
+     * read driver data from file
+     * @param string $driver driver name
+     * @return array saved driver data
+     */
     public function readDriverData($driver)
     {
         $fileName = $this->getDriverPath($driver);
         if (!file_exists($fileName))
-        	return null;
+            return null;
 
         $content = @file_get_contents($fileName);
         if (!$content)
-        	return null;
+            return null;
 
         $content = CJSON::decode($content);
         if (!$content)
@@ -265,9 +265,9 @@ abstract class EssentialDataServiceBase extends CComponent implements IEssential
 
 
     /**
-	 * create feed data.
-	 * @return boolean whether data was successfuly created.
-	 */
+     * create feed data.
+     * @return boolean whether data was successfuly created.
+     */
     public function run()
     {
         $myPid = getmypid();
@@ -280,9 +280,9 @@ abstract class EssentialDataServiceBase extends CComponent implements IEssential
         $lockFile = $path . DS . 'lock.txt';
         if (file_exists($lockFile)) {
             $pid = file_get_contents($lockFile);
-            if (posix_getsid($pid)) {
+            unlink($lockFile);
+            if (@posix_getsid($pid))
                 return false;
-            }
         }
 
         $this->saveData($lockFile, $myPid);
@@ -292,11 +292,11 @@ abstract class EssentialDataServiceBase extends CComponent implements IEssential
             $driverClass = $this->getDriverClass($driver);
             $driverClass->setData($this->readDriverData($driver));
             if (!$driverClass->run())
-            	throw new EssentialDataException(Yii::t('essentialdata', 'Driver {driver} failed', array('{driver}' => $driver)), 500);
+                throw new EssentialDataException(Yii::t('essentialdata', 'Driver {driver} failed', array('{driver}' => $driver)), 500);
 
             $data = $driverClass->getData();
             if (!$this->checkDriverData($data))
-            	throw new EssentialDataException(Yii::t('essentialdata', 'Driver {driver} data validation failed', array('{driver}' => $driver)), 500);
+                throw new EssentialDataException(Yii::t('essentialdata', 'Driver {driver} data validation failed', array('{driver}' => $driver)), 500);
 
             $path = $this->getDriverPath($driver);
             if (!$this->saveData($path, $data))
@@ -328,12 +328,12 @@ abstract class EssentialDataServiceBase extends CComponent implements IEssential
     }
 
     /**
-	 * Makes the curl request to the url.
-	 * @param string $url url to request.
-	 * @param array $options HTTP request options. Keys: query, data, referer.
-	 * @param boolean $parseJson Whether to parse response in json format.
-	 * @return string the response.
-	 */
+     * Makes the curl request to the url.
+     * @param string $url url to request.
+     * @param array $options HTTP request options. Keys: query, data, referer.
+     * @param boolean $parseJson Whether to parse response in json format.
+     * @return string the response.
+     */
     public function makeRequest($url, $options = array(), $parseJson = true)
     {
         $ch = $this->initRequest($url, $options);
@@ -392,12 +392,12 @@ abstract class EssentialDataServiceBase extends CComponent implements IEssential
     }
 
     /**
-	 * Initializes a new session and return a cURL handle.
-	 * @param string $url url to request.
-	 * @param array $options HTTP request options. Keys: query, data, referer.
-	 * @param boolean $parseJson Whether to parse response in json format.
-	 * @return cURL handle.
-	 */
+     * Initializes a new session and return a cURL handle.
+     * @param string $url url to request.
+     * @param array $options HTTP request options. Keys: query, data, referer.
+     * @param boolean $parseJson Whether to parse response in json format.
+     * @return cURL handle.
+     */
     protected function initRequest($url, $options = array())
     {
         $ch = curl_init();
@@ -413,10 +413,10 @@ abstract class EssentialDataServiceBase extends CComponent implements IEssential
     }
 
     /**
-	 * Parse response from {@link makeRequest} in json format and check errors.
-	 * @param string $response Json string.
-	 * @return object result.
-	 */
+     * Parse response from {@link makeRequest} in json format and check errors.
+     * @param string $response Json string.
+     * @return object result.
+     */
     protected function parseJson($response)
     {
         try {
@@ -434,10 +434,10 @@ abstract class EssentialDataServiceBase extends CComponent implements IEssential
     }
 
     /**
-	 * Returns the error info from json.
-	 * @param stdClass $json the json response.
-	 * @return array the error array with 2 keys: code and message. Should be null if no errors.
-	 */
+     * Returns the error info from json.
+     * @param stdClass $json the json response.
+     * @return array the error array with 2 keys: code and message. Should be null if no errors.
+     */
     protected function fetchJsonError($json)
     {
         if (isset($json->error)) {
@@ -450,18 +450,18 @@ abstract class EssentialDataServiceBase extends CComponent implements IEssential
     }
 
     /**
-	 * Fetch attributes array.
-	 * @return boolean whether the attributes was successfully fetched.
-	 */
+     * Fetch attributes array.
+     * @return boolean whether the attributes was successfully fetched.
+     */
     protected function fetchAttributes()
     {
         return true;
     }
 
     /**
-	 * Fetch attributes array.
-	 * This function is internally used to handle fetched state.
-	 */
+     * Fetch attributes array.
+     * This function is internally used to handle fetched state.
+     */
     protected function _fetchAttributes()
     {
         if (!$this->fetched) {
@@ -473,9 +473,9 @@ abstract class EssentialDataServiceBase extends CComponent implements IEssential
     }
 
     /**
-	 * Returns the array that contains all available attributes.
-	 * @return array the attributes.
-	 */
+     * Returns the array that contains all available attributes.
+     * @return array the attributes.
+     */
     public function getAttributes()
     {
         $this->_fetchAttributes();
@@ -487,11 +487,11 @@ abstract class EssentialDataServiceBase extends CComponent implements IEssential
     }
 
     /**
-	 * Returns the attribute value.
-	 * @param string $key the attribute name.
-	 * @param mixed $default the default value.
-	 * @return mixed the attribute value.
-	 */
+     * Returns the attribute value.
+     * @param string $key the attribute name.
+     * @param mixed $default the default value.
+     * @return mixed the attribute value.
+     */
     public function getAttribute($key, $default = null)
     {
         $this->_fetchAttributes();
@@ -503,10 +503,10 @@ abstract class EssentialDataServiceBase extends CComponent implements IEssential
     }
 
     /**
-	 * Whether the attribute exists.
-	 * @param string $key the attribute name.
-	 * @return boolean true if attribute exists, false otherwise.
-	 */
+     * Whether the attribute exists.
+     * @param string $key the attribute name.
+     * @return boolean true if attribute exists, false otherwise.
+     */
     public function hasAttribute($key)
     {
         return isset($this->attributes[$key]);
