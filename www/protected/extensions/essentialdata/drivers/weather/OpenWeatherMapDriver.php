@@ -118,19 +118,51 @@ class OpenWeatherMapDriver extends OpenWeatherMapDriverBase
     }
 
     /**
-     * Создает массив детальных данных
+     * Получить информацию о погоде на 16 дней
      */
-    private function createDetailCityArray($data)
+    private function getWeatherDaily()
     {
-        return array(
-            "temperature"   => $data['main']['temp'],
-            "relwet"        => $data['main']['humidity'],
-            "pressure"      => $this->mmHg($data['main']['pressure']),
-            "wind"          => $data['wind']['speed'],
-            "cloudiness"    => $this->cloudiness($data['weather'][0]),
-            "precipitation" => $this->precipitation($data['weather'][0]),
-            "windDirection" => $this->windDirection($data['wind'])
-        );
+        $weatherArr = array();
+
+        // Получаем детальную информацию
+        $mainCityDetailData = $this->getWeatherDailyData($this->cityId, $this->lon, $this->lat);
+        $cityName = $mainCityDetailData['city']['name'];
+
+        foreach ($mainCityDetailData['list'] as $dayData) {
+            $currDate = date('Y-m-d', $dayData['dt']);
+            
+            if (!isset($weatherArr[$currDate])) {
+                $weatherArr[$currDate] = array(
+                    'name'  => (!empty($this->cityName)) ? $this->cityName : $cityName,
+                    'other' => array()
+                );
+            }
+            $weatherArr[$currDate]['daily'] = $this->createDailyCityArray($dayData);
+        }
+
+        foreach ($this->cities as $cityData) {
+            $cityDetailData = $this->getWeatherDailyData($cityData['cityId'], $cityData['lon'], $cityData['lat']);
+            
+            $cityId     = $cityDetailData['city']['id'];
+            $cityName   = $cityDetailData['city']['name'];
+
+            $cityDetailArr = array();
+            foreach ($cityDetailData['list'] as $dayData) {
+                $currDate = date('Y-m-d', $dayData['dt']);
+                
+                // Если для главного города такой даты нет, то и записывать некуда
+                if (!isset($weatherArr[$currDate]))
+                    continue;
+
+                if (!isset($weatherArr[$currDate]['other'][$cityId])) {
+                    $weatherArr[$currDate]['other'][$cityId] = array(
+                        'name' => !empty($cityData['cityName']) ? $cityData['cityName'] : $cityName,
+                    );
+                }
+                $weatherArr[$currDate]['other'][$cityId]['daily'] = $this->createDailyCityArray($dayData);
+            }
+        }
+        return $weatherArr;
     }
 
 
@@ -141,6 +173,13 @@ class OpenWeatherMapDriver extends OpenWeatherMapDriverBase
             throw new EssentialDataException(Yii::t('essentialdata', get_class($this).': cityId or coordinates attributes required', array()), 500);
 
         $weatherArr = $this->getWeather();
+        $weatherDailyArr = $this->getWeatherDaily();
+        foreach ($weatherDailyArr as $date => $weatherDaily) {
+            if (isset($weatherArr[$date]))
+                continue;
+            $weatherArr[$date] = $weatherDaily;
+        }
+
         $this->setData($weatherArr);
 
         if (!sizeof($weatherArr))

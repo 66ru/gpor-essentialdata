@@ -22,12 +22,9 @@ class OpenWeatherMapCurrentDriver extends OpenWeatherMapDriverBase
         $mainCityDetailData = $this->getCurrentWeatherData($this->cityId, $this->lon, $this->lat);
         $cityName = $mainCityDetailData['name'];
 
-        $weatherArr = array(
-            'name'          => (!empty($this->cityName)) ? $this->cityName : $cityName,
-            'temperature'   => $mainCityDetailData['main']['temp'],
-            'condition'     => $this->condition($mainCityDetailData['weather'][0]),
-            'other'         => array()
-        );
+        $weatherArr = $this->createDetailCityArray($mainCityDetailData);
+        $weatherArr['name'] = (!empty($this->cityName)) ? $this->cityName : $cityName;
+        $weatherArr['other'] = array();
 
         foreach ($this->cities as $cityData) {
             $cityDetailData = $this->getCurrentWeatherData($cityData['cityId'], $cityData['lon'], $cityData['lat']);
@@ -38,11 +35,8 @@ class OpenWeatherMapCurrentDriver extends OpenWeatherMapDriverBase
             $cityDetailArr = array();
 
             if (!isset($weatherArr['other'][$cityId])) {
-                $weatherArr['other'][$cityId] = array(
-                    'name'          => !empty($cityData['cityName']) ? $cityData['cityName'] : $cityName,
-                    'temperature'   => $cityDetailData['main']['temp'],
-                    'condition'     => $this->condition($cityDetailData['weather'][0]),
-                );
+                $weatherArr['other'][$cityId] = $this->createDetailCityArray($cityDetailData);
+                $weatherArr['other'][$cityId]['name'] = !empty($cityData['cityName']) ? $cityData['cityName'] : $cityName;
             }
         }
         return $weatherArr;
