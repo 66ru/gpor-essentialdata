@@ -117,24 +117,6 @@ class OpenWeatherMapDriver extends OpenWeatherMapDriverBase
         return $weatherArr;
     }
 
-    /**
-     * Создает массив детальных данных
-     */
-    private function createDetailCityArray($data)
-    {
-        return array(
-            "temperature"       => $data['main']['temp'],
-            "humidity"          => $data['main']['humidity'],
-            "pressure"          => $this->mmHg($data['main']['pressure']),
-            "cloudiness"        => $data['clouds']['all'],
-            "precipitationIcon" => $this->precipitation($data['weather'][0]),
-            "precipitationText" => $this->condition($data['weather'][0]),
-            "windSpeed"         => $data['wind']['speed'],
-            "windDirection"     => $this->windDirection($data['wind'])
-        );
-    }
-
-
     public function run()
     {
         $isGeoEmpty = !$this->lon || !$this->lat;

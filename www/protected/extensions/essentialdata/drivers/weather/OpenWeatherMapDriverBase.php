@@ -274,4 +274,22 @@ class OpenWeatherMapDriverBase extends EssentialDataDriverBase
         // В случае, если пришел неизвестный код, возращаем ясную погоду
         return WeatherHelper::WEATHER_STATUS_CODE_CLEAR;
     }
+
+
+    /**
+     * Создает массив детальных данных
+     */
+    protected function createDetailCityArray($data)
+    {
+        return array(
+            "temperature"       => $data['main']['temp'],
+            "humidity"          => $data['main']['humidity'],
+            "pressure"          => $this->mmHg($data['main']['pressure']),
+            "cloudiness"        => $data['clouds']['all'],
+            "precipitationIcon" => $this->precipitation($data['weather'][0]),
+            "precipitationText" => $this->condition($data['weather'][0]),
+            "windSpeed"         => $data['wind']['speed'],
+            "windDirection"     => $this->windDirection($data['wind'])
+        );
+    }
 }
