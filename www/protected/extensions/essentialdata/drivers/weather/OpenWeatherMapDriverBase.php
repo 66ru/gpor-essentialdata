@@ -22,7 +22,15 @@ class OpenWeatherMapDriverBase extends EssentialDataDriverBase
      */
     protected function getWeatherData($cityId, $lon=null, $lat=null)
     {
-        return $this->getWeatherDataInner(false, $cityId, $lon=null, $lat=null);
+        return $this->getWeatherDataInner('forecast', $cityId, $lon=null, $lat=null);
+    }
+
+    /**
+     * Получить данные о погоде с сервиса
+     */
+    protected function getWeatherDailyData($cityId, $lon=null, $lat=null)
+    {
+        return $this->getWeatherDataInner('forecast/daily', $cityId, $lon=null, $lat=null);
     }
 
     /**
@@ -30,20 +38,17 @@ class OpenWeatherMapDriverBase extends EssentialDataDriverBase
      */
     protected function getCurrentWeatherData($cityId, $lon=null, $lat=null)
     {
-        return $this->getWeatherDataInner(true, $cityId, $lon=null, $lat=null);
+        return $this->getWeatherDataInner('weather', $cityId, $lon=null, $lat=null);
     }
 
     /**
      * Получить данные о погоде с сервиса
      */
-    private function getWeatherDataInner($current, $cityId, $lon=null, $lat=null)
+    private function getWeatherDataInner($uri, $cityId, $lon=null, $lat=null)
     {
         $queryStr = ($cityId)
             ? 'id='.$cityId
             : 'lon='.$lon.'&lat='.$lat;
-        $uri = ($current)
-            ? 'weather'
-            : 'forecast';
         $uri = 'http://api.openweathermap.org/data/2.5/'.$uri.'?'.$queryStr.'&units=metric';
 
         // Данные не загружены
@@ -197,13 +202,11 @@ class OpenWeatherMapDriverBase extends EssentialDataDriverBase
     /**
      * Перевод градусов в направление ветра
      */
-    protected function windDirection($windData)
+    protected function windDirection($speed, $deg)
     {
         // Абстрактно считаем, что при маленьком ветре стоит полный штиль
-        if ($windData['speed'] < 0.1)
+        if ($speed < 0.1)
             return '-';
-
-        $deg = $windData['deg'];
 
         // На всякий случай нормируем до 360 градусов
         while ($deg < 0)
@@ -264,8 +267,8 @@ class OpenWeatherMapDriverBase extends EssentialDataDriverBase
             '13d' => WeatherHelper::WEATHER_STATUS_CODE_SNOW,
             '13n' => WeatherHelper::WEATHER_STATUS_CODE_SNOW,
             // Туман
-            '50d' => WeatherHelper::WEATHER_STATUS_CODE_CLOUDY,
-            '50n' => WeatherHelper::WEATHER_STATUS_CODE_CLOUDY
+            '50d' => WeatherHelper::WEATHER_STATUS_CODE_MIST,
+            '50n' => WeatherHelper::WEATHER_STATUS_CODE_MIST
         );
         $iconCode = $weatherData['icon'];
         if (isset($arr[$iconCode]))
@@ -289,7 +292,28 @@ class OpenWeatherMapDriverBase extends EssentialDataDriverBase
             "precipitationIcon" => $this->precipitation($data['weather'][0]),
             "precipitationText" => $this->condition($data['weather'][0]),
             "windSpeed"         => $data['wind']['speed'],
-            "windDirection"     => $this->windDirection($data['wind'])
+            "windDirection"     => $this->windDirection($data['wind']['speed'], $data['wind']['deg'])
+        );
+    }
+
+
+    /**
+     * Создает массив кратких данных
+     */
+    protected function createDailyCityArray($data)
+    {
+        return array(
+            "morning"           => $data['temp']['morn'],
+            "day"               => $data['temp']['day'],
+            "evening"           => $data['temp']['eve'],
+            "night"             => $data['temp']['night'],
+            "humidity"          => $data['humidity'],
+            "pressure"          => $this->mmHg($data['pressure']),
+            "cloudiness"        => $data['clouds'],
+            "precipitationIcon" => $this->precipitation($data['weather'][0]),
+            "precipitationText" => $this->condition($data['weather'][0]),
+            "windSpeed"         => $data['speed'],
+            "windDirection"     => $this->windDirection($data['speed'], $data['deg'])
         );
     }
 }

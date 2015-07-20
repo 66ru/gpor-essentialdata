@@ -17,6 +17,7 @@ class WeatherHelper
     const WEATHER_STATUS_CODE_NIGHT_PARTY_CLOUDY    = 11;       // ночь, переменная облачность
     const WEATHER_STATUS_CODE_NIGHT_STRONG_CLOUDY   = 12;       // ночь, облачно
     const WEATHER_STATUS_CODE_NIGHT_CLOUDY          = 13;       // ночь, пасмурно
+    const WEATHER_STATUS_CODE_MIST                  = 20;       // туман
 
     private static $weatherConditions = array(
         0 => "Ясно",
