@@ -8,22 +8,22 @@
 require_once dirname(dirname(__FILE__)).'/EssentialDataServiceBase.php';
 require_once dirname(dirname(__FILE__)).'/helpers/EssentialCurrentWeatherHelper.php';
 
-class EssentialCurrentWeatherService extends EssentialDataServiceBase {	
-	
-	protected $name = 'currentweather';
-	protected $title = 'Текущая погода';
+class EssentialCurrentWeatherService extends EssentialDataServiceBase
+{
+    protected $name = 'currentweather';
+    protected $title = 'Текущая погода';
 
-	public function checkDriverData ($data)
-	{
-		return true;
-	}
+    public function checkDriverData($data)
+    {
+        return true;
+    }
 
     public function readDriverData($driver)
     {
         $data = parent::readDriverData($driver);
 
-	    if($data == null)
-		    return $data;
+        if($data == null)
+            return $data;
 
         if($this->checkWeatherCondition($data))
             return $data;
@@ -42,5 +42,5 @@ class EssentialCurrentWeatherService extends EssentialDataServiceBase {
     }
 
 
-	
+
 }
