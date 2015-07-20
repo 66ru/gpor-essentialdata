@@ -6,7 +6,6 @@
  */
 
 require_once dirname(dirname(__FILE__)).'/EssentialDataServiceBase.php';
-require_once dirname(dirname(__FILE__)).'/helpers/EssentialCurrentWeatherHelper.php';
 
 class EssentialCurrentWeatherService extends EssentialDataServiceBase
 {
@@ -25,22 +24,15 @@ class EssentialCurrentWeatherService extends EssentialDataServiceBase
         if($data == null)
             return $data;
 
-        if($this->checkWeatherCondition($data))
-            return $data;
-        else
+        if(!$this->checkWeatherCondition($data))
             throw new EssentialDataException(Yii::t('essentialdata', get_class($this).': weather condition "'.$data['condition'].'" not found or incorrect', array()), 500);
+
+        return $data;
     }
 
     public function checkWeatherCondition($data)
     {
         // todo: надо не падать, а слать сообщение, что найдено новое погодное условие
         return true;
-        if(is_array($data) && isset($data['condition']) && in_array($data['condition'], EssentialCurrentWeatherHelper::getWeatherConditions()))
-            return true;
-        else
-            return false;
     }
-
-
-
 }

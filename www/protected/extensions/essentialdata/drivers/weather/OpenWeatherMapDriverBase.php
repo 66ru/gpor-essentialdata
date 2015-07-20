@@ -5,7 +5,7 @@
  */
 
 require_once dirname(__FILE__).'/../../EssentialDataDriverBase.php';
-require_once dirname(__FILE__).'/../../helpers/EssentialCurrentWeatherHelper.php';
+require_once dirname(__FILE__).'/../../helpers/WeatherHelper.php';
 
 
 class OpenWeatherMapDriverBase extends EssentialDataDriverBase
@@ -70,7 +70,7 @@ class OpenWeatherMapDriverBase extends EssentialDataDriverBase
     }
 
     /**
-     * Получить код погодных условий
+     * Получить текст погодных условий
      */
     protected function condition($weatherData)
     {
@@ -156,7 +156,8 @@ class OpenWeatherMapDriverBase extends EssentialDataDriverBase
             961 => -1,
             962 => -1
         );
-        $essentialConditions = EssentialCurrentWeatherHelper::getWeatherConditions();
+
+        $essentialConditions = WeatherHelper::getWeatherConditions();
         $id = $weatherData['id'];
 
         $c = -1;
@@ -222,80 +223,55 @@ class OpenWeatherMapDriverBase extends EssentialDataDriverBase
     }
 
     /**
-     * Перевод облачности в % в коды
+     * Получение типа осадков
      */
-    protected function cloudiness($weatherData)
+    protected function precipitation($weatherData)
     {
-        /*
-         * 0 - ясно
-         * 1 - переменная облачность
-         * 2 - облачно
-         * 3 - пасмурно
-         * 4 - дождь
-         * 5 - ливень
-         * 6 - снег
-         * 7 - град
-         * 8 - гроза
-         * 9 - вечером ясно
-         * 10 - вечером переменная облачность
-         * 11 - вечером облачно
-         */
+        // Сперва берем по коду
+        switch (intval($weatherData['id'])) {
+            // Град
+            case 906:
+                return WeatherHelper::WEATHER_STATUS_CODE_HAIL;
+            // Снег с дождем
+            case 615:
+            case 616:
+                return WeatherHelper::WEATHER_STATUS_CODE_RAIN_AND_SNOW;
+        }
+
         static $arr = array(
-            '01d' => 0, '01n' => 0,     // Ясно
-            '02d' => 1, '02n' => 1,     // Переменная облачность
-            '03d' => 2, '03n' => 2,     // Облачно
-            '04d' => 3, '04n' => 3,     // Пасмурно
-            '09d' => 4, '09n' => 4,     // Дождь
-            '10d' => 5, '10n' => 5,     // Ливень
-            '11d' => 8, '11n' => 8,     // Гроза
-            '13d' => 6, '13n' => 6,     // Снег
-            '50d' => 3, '50n' => 3      // Туман
+            // Ясно
+            '01d' => WeatherHelper::WEATHER_STATUS_CODE_CLEAR,
+            '01n' => WeatherHelper::WEATHER_STATUS_CODE_NIGHT_CLEAR,
+            // Переменная облачность
+            '02d' => WeatherHelper::WEATHER_STATUS_CODE_PARTY_CLOUDY,
+            '02n' => WeatherHelper::WEATHER_STATUS_CODE_NIGHT_PARTY_CLOUDY,
+            // Облачно
+            '03d' => WeatherHelper::WEATHER_STATUS_CODE_STRONG_CLOUDY,
+            '03n' => WeatherHelper::WEATHER_STATUS_CODE_NIGHT_STRONG_CLOUDY,
+            // Пасмурно
+            '04d' => WeatherHelper::WEATHER_STATUS_CODE_CLOUDY,
+            '04n' => WeatherHelper::WEATHER_STATUS_CODE_NIGHT_CLOUDY,
+            // Ливень
+            '09d' => WeatherHelper::WEATHER_STATUS_CODE_SHOWER_RAIN,
+            '09n' => WeatherHelper::WEATHER_STATUS_CODE_SHOWER_RAIN,
+            // Дождь
+            '10d' => WeatherHelper::WEATHER_STATUS_CODE_RAIN,
+            '10n' => WeatherHelper::WEATHER_STATUS_CODE_RAIN,
+            // Гроза
+            '11d' => WeatherHelper::WEATHER_STATUS_CODE_THUNDER,
+            '11n' => WeatherHelper::WEATHER_STATUS_CODE_THUNDER,
+            // Снег
+            '13d' => WeatherHelper::WEATHER_STATUS_CODE_SNOW,
+            '13n' => WeatherHelper::WEATHER_STATUS_CODE_SNOW,
+            // Туман
+            '50d' => WeatherHelper::WEATHER_STATUS_CODE_CLOUDY,
+            '50n' => WeatherHelper::WEATHER_STATUS_CODE_CLOUDY
         );
         $iconCode = $weatherData['icon'];
         if (isset($arr[$iconCode]))
             return $arr[$iconCode];
 
-        // В случае, если пришел неизвестный код, возращаем переменную облачность
-        return 1;
+        // В случае, если пришел неизвестный код, возращаем ясную погоду
+        return WeatherHelper::WEATHER_STATUS_CODE_CLEAR;
     }
-
-    /**
-     * Получение типа осадков
-     */
-    protected function precipitation($weatherData)
-    {
-        /*
-         * 0 - нет осадков
-         * 4 - дождь
-         * 5 - ливень
-         * 6 - снег
-         * 7 - град
-         * 8 - гроза
-         */
-        switch ($weatherData['icon']) {
-            case '09d':
-            case '09n':
-                return 4;
-
-            case '10d':
-            case '10n':
-                return 5;
-
-            case '13d':
-            case '13n':
-                return 6;
-
-            case '11d':
-            case '11n':
-                return 8;
-        }
-
-        // Град берется только по коду
-        if (intval($weatherData['id']) == 906)
-            return 7;
-
-        return 0;
-    }
-
-
 }

@@ -6,7 +6,7 @@
  */
 
 require_once dirname(dirname(__FILE__)).'/EssentialDataDriverBase.php';
-require_once dirname(dirname(__FILE__)).'/helpers/EssentialCurrentWeatherHelper.php';
+require_once dirname(dirname(__FILE__)).'/helpers/WeatherHelper.php';
 
 class EssentialCurrentHmnDriver extends EssentialDataDriverBase {
 	
@@ -293,7 +293,7 @@ class EssentialCurrentHmnDriver extends EssentialDataDriverBase {
 
     public function weatherStatusToEssentialStatus($status, $code)
     {
-		$weatherStatuses = EssentialCurrentWeatherHelper::getWeatherConditions();
+		$weatherStatuses = WeatherHelper::getWeatherConditions();
 
         if(in_array($status, $weatherStatuses))
             return $status;

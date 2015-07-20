@@ -123,13 +123,14 @@ class OpenWeatherMapDriver extends OpenWeatherMapDriverBase
     private function createDetailCityArray($data)
     {
         return array(
-            "temperature"   => $data['main']['temp'],
-            "relwet"        => $data['main']['humidity'],
-            "pressure"      => $this->mmHg($data['main']['pressure']),
-            "wind"          => $data['wind']['speed'],
-            "cloudiness"    => $this->cloudiness($data['weather'][0]),
-            "precipitation" => $this->precipitation($data['weather'][0]),
-            "windDirection" => $this->windDirection($data['wind'])
+            "temperature"       => $data['main']['temp'],
+            "humidity"          => $data['main']['humidity'],
+            "pressure"          => $this->mmHg($data['main']['pressure']),
+            "cloudiness"        => $data['clouds']['all'],
+            "precipitationIcon" => $this->precipitation($data['weather'][0]),
+            "precipitationText" => $this->condition($data['weather'][0]),
+            "windSpeed"         => $data['wind']['speed'],
+            "windDirection"     => $this->windDirection($data['wind'])
         );
     }
 
