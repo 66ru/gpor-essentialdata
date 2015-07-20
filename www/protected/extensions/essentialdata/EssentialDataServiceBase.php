@@ -143,11 +143,11 @@ abstract class EssentialDataServiceBase extends CComponent implements IEssential
     {
         $drivers = array();
         foreach ($this->drivers as $driver => $options) {
-                $class = $this->getDriverClass($driver);
-                $drivers[$driver] = (object) array(
-                    'id' => $class->getDriverName(),
-                    'title' => $class->getDriverTitle(),
-                );
+            $class = $this->getDriverClass($driver);
+            $drivers[$driver] = (object) array(
+                'id' => $class->getDriverName(),
+                'title' => $class->getDriverTitle(),
+            );
         }
         return $drivers;
     }

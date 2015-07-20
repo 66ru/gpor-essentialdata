@@ -44,11 +44,11 @@ $mainConfig = array(
         'application.extensions.essentialdata.drivers.*',
         'application.helpers.*',
         'application.widgets.*',
-),
+    ),
 
     // application-level parameters that can be accessed
     // using Yii::app()->params['paramName']
-    'params'=>$params,
+    'params' => $params,
 
     // application components
     'components'=>array(

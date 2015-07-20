@@ -4,73 +4,79 @@ class OpenWeatherMapDrivers
 {
     public static function getConfig($current=false)
     {
+        /**
+         * NOTE: В конфиге можно указывать или cityId или lon/lat
+         *       Приоритетным будет cityId
+         */
+
+        $driverName = 'ext.essentialdata.drivers.weather.' . ($current ? 'OpenWeatherMapCurrentDriver' : 'OpenWeatherMapDriver');
         return array(
             'ekb' => array(
-                'class' => 'EssentialOpenWeatherDriver',
-                'title' => 'Прогноз погоды в Екатеринбурге на 16 дней',
-                'cityId' => 1486209,
-                'lon' => 60.612499,
-                'lat' => 56.857498,
-                'cities' => array(
-                    array('cityId'=>520494, 'lon'=>null, 'lat'=>null),      // Нижний Тагил
-                    array('cityId'=>1504826, 'lon'=>null, 'lat'=>null)      // Каменск-Уральский
-                ),
-                'current' => $current
+                'class'     => $driverName,
+                'title'     => 'Прогноз погоды в Екатеринбурге',
+                'cityName'  => 'Екатеринбург',
+                'cityId'    => 1486209,
+                'lon'       => 60.612499,
+                'lat'       => 56.857498,
+                'cities'    => array(
+                    array('cityName'=>'Нижний Тагил', 'cityId'=>520494, 'lon'=>null, 'lat'=>null),
+                    array('cityName'=>'Каменск-Уральский', 'cityId'=>1504826, 'lon'=>null, 'lat'=>null)
+                )
             ),
-/*            'perm' => array(
-                'class' => 'EssentialOpenWeatherDriver',
-                'title' => 'Прогноз погоды в Перми на 16 дней',
-                'cityId' => 511196,
-                'lon' => 56.285519,
-                'lat' => 58.01741,
-                'cities' => array(),
-                'current' => $current
+            'perm' => array(
+                'class'     => $driverName,
+                'title'     => 'Прогноз погоды в Перми',
+                'cityName'  => 'Пермь',
+                'cityId'    => 511196,
+                'lon'       => 56.285519,
+                'lat'       => 58.01741,
+                'cities'    => array()
             ),
             'tambov' => array(
-                'class' => 'EssentialOpenWeatherDriver',
-                'title' => 'Прогноз погоды в Тамбове на 16 дней',
-                'cityId' => 484646,
-                'lon' => 41.433891,
-                'lat' => 52.73167,
-                'cities' => array(),
-                'current' => $current
+                'class'     => $driverName,
+                'title'     => 'Прогноз погоды в Тамбове',
+                'cityName'  => 'Тамбов',
+                'cityId'    => 484646,
+                'lon'       => 41.433891,
+                'lat'       => 52.73167,
+                'cities'    => array()
             ),
             'almaty' => array(
-                'class' => 'EssentialOpenWeatherDriver',
-                'title' => 'Прогноз погоды в Алматы на 16 дней',
-                'cityId' => 1526384,
-                'lon' => 76.949997,
-                'lat' => 43.25,
-                'cities' => array(),
-                'current' => $current
+                'class'     => $driverName,
+                'title'     => 'Прогноз погоды в Алматы',
+                'cityName'  => 'Алматы',
+                'cityId'    => 1526384,
+                'lon'       => 76.949997,
+                'lat'       => 43.25,
+                'cities'    => array()
             ),
             'omsk' => array(
-                'class' => 'EssentialOpenWeatherDriver',
-                'title' => 'Прогноз погоды в Омске на 16 дней',
-                'cityId' => 1496153,
-                'lon' => 73.400002,
-                'lat' => 55,
-                'cities' => array(),
-                'current' => $current
+                'class'     => $driverName,
+                'title'     => 'Прогноз погоды в Омске',
+                'cityName'  => 'Омск',
+                'cityId'    => 1496153,
+                'lon'       => 73.400002,
+                'lat'       => 55,
+                'cities'    => array()
             ),
             'gorodche' => array(
-                'class' => 'EssentialOpenWeatherDriver',
-                'title' => 'Прогноз погоды в Череповце на 16 дней',
-                'cityId' => 569223,
-                'lon' => 37.900002,
-                'lat' => 59.133331,
-                'cities' => array(),
-                'current' => $current
+                'class'     => $driverName,
+                'title'     => 'Прогноз погоды в Череповце',
+                'cityName'  => 'Череповец',
+                'cityId'    => 569223,
+                'lon'       => 37.900002,
+                'lat'       => 59.133331,
+                'cities'    => array()
             ),
             'engels' => array(
-                'class' => 'EssentialOpenWeatherDriver',
-                'title' => 'Прогноз погоды в Энгельсе на 16 дней',
-                'cityId' => 563464,
-                'lon' => 46.116669,
-                'lat' => 51.5,
-                'cities' => array(),
-                'current' => $current
-            )*/
+                'class'     => $driverName,
+                'title'     => 'Прогноз погоды в Энгельсе',
+                'cityName'  => 'Энгельс',
+                'cityId'    => 563464,
+                'lon'       => 46.116669,
+                'lat'       => 51.5,
+                'cities'    => array()
+            )
         );
 
     }
@@ -78,15 +84,13 @@ class OpenWeatherMapDrivers
 
 return array(
     'weather' => array (
-        'class' => 'EssentialOpenWeatherService',
+        'class' => 'ext.essentialdata.services.weather.OpenWeatherMapService',
         'period' => '/5 * * * *',
-        'current' => false,
         'drivers' => OpenWeatherMapDrivers::getConfig(),
     ),
     'weathercurrent' => array (
-        'class' => 'EssentialOpenWeatherService',
+        'class' => 'ext.essentialdata.services.weather.OpenWeatherMapCurrentService',
         'period' => '/5 * * * *',
-        'current' => true,
         'drivers' => OpenWeatherMapDrivers::getConfig(true),
     )
 );
