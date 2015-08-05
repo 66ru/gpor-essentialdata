@@ -12,6 +12,6 @@ class OpenWeatherMapService extends EssentialDataServiceBase
 
     public function checkDriverData($data)
     {
-        return true;
+        return count($data) > 0 ? true : false;
     }
 }

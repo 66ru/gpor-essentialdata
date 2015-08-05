@@ -26,6 +26,12 @@ class OpenWeatherMapCurrentDriver extends OpenWeatherMapDriverBase
         $weatherArr['name'] = (!empty($this->cityName)) ? $this->cityName : $cityName;
         $weatherArr['other'] = array();
 
+        // Проверяем на то, что температура пришла
+        if (!is_numeric($weatherArr['temperature'])) {
+            // Возвращаем пустой массив, чтобы сервис потом выдал ошибку
+            return array();
+        }
+
         foreach ($this->cities as $cityData) {
             $cityDetailData = $this->getCurrentWeatherData($cityData['cityId'], $cityData['lon'], $cityData['lat']);
             
