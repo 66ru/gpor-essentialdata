@@ -10,6 +10,7 @@ require_once dirname(__FILE__).'/../../helpers/WeatherHelper.php';
 
 class OpenWeatherMapDriverBase extends EssentialDataDriverBase
 {
+    protected $apiKey = '4b93289d392b45b30acf4cfa94f5b6e6';
     protected $cityName = '';
     protected $cityId = false;
     protected $lon = false;
@@ -49,7 +50,7 @@ class OpenWeatherMapDriverBase extends EssentialDataDriverBase
         $queryStr = ($cityId)
             ? 'id='.$cityId
             : 'lon='.$lon.'&lat='.$lat;
-        $uri = 'http://api.openweathermap.org/data/2.5/'.$uri.'?'.$queryStr.'&units=metric';
+        $uri = 'http://api.openweathermap.org/data/2.5/'.$uri.'?'.$queryStr.'&units=metric&APPID='.$this->apiKey;
 
         // Данные не загружены
         $data = $this->component->loadUrl($uri, false);
@@ -285,7 +286,7 @@ class OpenWeatherMapDriverBase extends EssentialDataDriverBase
     protected function createDetailCityArray($data)
     {
         return array(
-            "temperature"       => $data['main']['temp'],
+            "temperature"       => (isset($data['main']['temp']) ? $data['main']['temp'] : null),
             "humidity"          => $data['main']['humidity'],
             "pressure"          => $this->mmHg($data['main']['pressure']),
             "cloudiness"        => $data['clouds']['all'],

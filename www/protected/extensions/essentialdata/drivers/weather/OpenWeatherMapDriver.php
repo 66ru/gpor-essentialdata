@@ -3,7 +3,6 @@
  * Драйвер для общения с OpenWeatherMap
  * http://openweathermap.org/weather-conditions
  */
-
 require_once dirname(__FILE__).'/OpenWeatherMapDriverBase.php';
 
 
