@@ -14,6 +14,15 @@ $res = array(
                 ),
             ),
         ),
+		'ratesonline' => array (
+			'class' => 'EssentialRatesOnlineService',
+        	'period' => '/30 * * * *',
+			'drivers' => array (
+				'default' => array(
+					'class' => 'EssentialRatesOnlineDriver',
+				),
+			),
+		),
         'bankcurrency' => array(
             'class' => 'EssentialBankCurrencyService',
             'period' => '/5 * * * *',
