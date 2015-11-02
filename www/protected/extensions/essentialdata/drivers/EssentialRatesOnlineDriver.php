@@ -18,8 +18,9 @@ class EssentialRatesOnlineDriver extends EssentialDataDriverBase {
 	public function run() {	
 		
 		$result = array(
-			'USD' => null,
-			'RUB' => null,
+			'USD' => array('value' => null),
+			'RUB' => array('value' => null),
+			'date' => date('Y-m-d H:i:s'),
 		);
 
 		$r = @file_get_contents($this->url);
@@ -27,9 +28,9 @@ class EssentialRatesOnlineDriver extends EssentialDataDriverBase {
 			$r = CJSON::decode($r);
 			if ($r) {
 				if (isset($r['USD_RUB']) && isset($r['USD_RUB']['val']) && $r['USD_RUB']['val'])
-					$result['USD'] = $r['USD_RUB']['val'];
+					$result['USD']['value'] = $r['USD_RUB']['val'];
 				if (isset($r['EUR_RUB']) && isset($r['EUR_RUB']['val']) && $r['EUR_RUB']['val'])
-					$result['EUR'] = $r['EUR_RUB']['val'];
+					$result['EUR']['value'] = $r['EUR_RUB']['val'];
 			}
 		}
 		
