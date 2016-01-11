@@ -43,8 +43,6 @@ class EssentialRatesOnlineWixiQuotesDriver extends EssentialDataDriverBase {
 						break;
 				}
 			}
-			var_dump($result);
-			die();
 		}
 		
 		$this->setData(array());
