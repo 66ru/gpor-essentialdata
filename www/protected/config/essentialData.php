@@ -19,7 +19,7 @@ $res = array(
         	'period' => '/30 * * * *',
 			'drivers' => array (
 				'default' => array(
-					'class' => 'EssentialRatesOnlineDriver',
+					'class' => 'EssentialRatesOnlineWixiQuotesDriver',
 				),
 			),
 		),
