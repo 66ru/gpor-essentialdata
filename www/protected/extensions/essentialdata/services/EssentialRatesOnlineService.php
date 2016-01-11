@@ -16,8 +16,20 @@ class EssentialRatesOnlineService extends EssentialDataServiceBase {
 	}
 	
 	public function checkDriverData ($data)
-	{
+	{		
 		return true;
 	}
-	
+
+
+    public function run()
+    {
+    	$time = time();
+    	$timeDiff = time() - $time;
+    	while ($timeDiff <= 55) {
+    		$res = parent::run();
+    		sleep(5);
+	    	$timeDiff = time() - $time;
+    	}
+        return $res;
+    }	
 }
